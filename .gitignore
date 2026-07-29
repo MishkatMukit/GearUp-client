@@ -13,6 +13,11 @@
 # testing
 /coverage
 
+# instruction files
+AGENTS.md
+features-structures.md
+frontend-rules.md
+
 # next.js
 /.next/
 /out/
