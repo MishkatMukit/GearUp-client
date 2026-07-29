@@ -13,11 +13,6 @@
 # testing
 /coverage
 
-# instruction files
-AGENTS.md
-features-structures.md
-frontend-rules.md
-
 # next.js
 /.next/
 /out/
@@ -45,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent instructions
+/AGENTS.md
+/frontend-rules.md
+/features-structures.md
