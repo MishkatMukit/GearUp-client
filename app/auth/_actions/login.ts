@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 import type { LoginState } from "@/lib/types"
 
 export const loginAction = async (redirectTo: string, prevState: LoginState, formData: FormData) => {
-  const email = formData.get("email") as string
+  const email = (formData.get("email") as string).toLowerCase()
   const password = formData.get("password") as string
 
   const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {

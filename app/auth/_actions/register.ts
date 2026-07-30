@@ -6,7 +6,7 @@ import type { RegisterState } from "@/lib/types"
 
 export const registerAction = async (prevState: RegisterState, formData: FormData) => {
   const name = formData.get("name") as string
-  const email = formData.get("email") as string
+  const email = (formData.get("email") as string).toLowerCase()
   const password = formData.get("password") as string
   const role = formData.get("role") as "CUSTOMER" | "PROVIDER"
 
@@ -18,15 +18,27 @@ export const registerAction = async (prevState: RegisterState, formData: FormDat
 
   const result = await res.json()
 
-  if (result.success) {
+  if (!result.success) {
+    return result
+  }
+
+  const loginRes = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  })
+
+  const loginResult = await loginRes.json()
+
+  if (loginResult.success) {
     const cookieStore = await cookies()
 
-    cookieStore.set("accessToken", result.data.accessToken, {
+    cookieStore.set("accessToken", loginResult.data.accessToken, {
       httpOnly: true,
       maxAge: 60 * 60 * 24,
       sameSite: "lax",
     })
-    cookieStore.set("refreshToken", result.data.refreshToken, {
+    cookieStore.set("refreshToken", loginResult.data.refreshToken, {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 7,
       sameSite: "lax",
@@ -35,5 +47,5 @@ export const registerAction = async (prevState: RegisterState, formData: FormDat
     redirect("/dashboard")
   }
 
-  return result
+  return loginResult
 }

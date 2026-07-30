@@ -1,36 +1,30 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useState, useActionState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { registerSchema, type RegisterFormData } from "@/lib/schemas"
+import { registerAction } from "@/app/auth/_actions/register"
+import { toast } from "sonner"
 
 export default function RegisterPage() {
   const [role, setRole] = useState<"CUSTOMER" | "PROVIDER">("CUSTOMER")
+  const [state, formAction, pending] = useActionState(
+    registerAction,
+    { success: false, statusCode: 0, message: "" },
+  )
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: { role: "CUSTOMER" },
-  })
-
-  const selectRole = (r: "CUSTOMER" | "PROVIDER") => {
-    setRole(r)
-    setValue("role", r, { shouldValidate: true })
-  }
-
-  const onSubmit = (data: RegisterFormData) => {
-    // no-op — functionality not implemented yet
-  }
+  useEffect(() => {
+    if (state.message) {
+      if (state.success) {
+        toast.success(state.message)
+      } else {
+        toast.error(state.message)
+      }
+    }
+  }, [state])
 
   return (
     <Card>
@@ -40,13 +34,14 @@ export default function RegisterPage() {
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form action={formAction} className="space-y-4">
           <div className="space-y-2">
             <Label>I want to</Label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => selectRole("CUSTOMER")}
+                onClick={() => { setRole("CUSTOMER"); }
+                }
                 className={`rounded-lg border px-4 py-3 text-sm font-medium transition-all ${
                   role === "CUSTOMER"
                     ? "border-primary bg-primary/10 text-primary"
@@ -57,7 +52,8 @@ export default function RegisterPage() {
               </button>
               <button
                 type="button"
-                onClick={() => selectRole("PROVIDER")}
+                onClick={() => { setRole("PROVIDER"); }
+                }
                 className={`rounded-lg border px-4 py-3 text-sm font-medium transition-all ${
                   role === "PROVIDER"
                     ? "border-primary bg-primary/10 text-primary"
@@ -67,52 +63,49 @@ export default function RegisterPage() {
                 List Gear
               </button>
             </div>
-            <input type="hidden" {...register("role")} />
-            {errors.role && (
-              <p className="text-xs text-destructive">{errors.role.message}</p>
-            )}
+            <input type="hidden" name="role" value={role} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
+              name="name"
               placeholder="John Doe"
-              {...register("name")}
+              required
+              minLength={2}
             />
-            {errors.name && (
-              <p className="text-xs text-destructive">{errors.name.message}</p>
-            )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
+              name="email"
               type="email"
               placeholder="you@example.com"
-              {...register("email")}
+              required
             />
-            {errors.email && (
-              <p className="text-xs text-destructive">{errors.email.message}</p>
-            )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              name="password"
               type="password"
               placeholder="At least 6 characters"
-              {...register("password")}
+              required
+              minLength={6}
             />
-            {errors.password && (
-              <p className="text-xs text-destructive">{errors.password.message}</p>
-            )}
           </div>
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Creating account..." : "Create Account"}
+          {!state.success && state.message && (
+            <p className="text-xs text-destructive">{state.message}</p>
+          )}
+
+          <Button type="submit" className="w-full" disabled={pending}>
+            {pending ? "Creating account..." : "Create Account"}
           </Button>
         </form>
 
