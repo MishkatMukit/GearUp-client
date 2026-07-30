@@ -1,16 +1,7 @@
 import { GearCard } from "./GearCard"
+import type { ApiGearItem } from "@/lib/types"
 
 const BACKEND_URL = process.env.BACKEND_API_URL ?? ""
-
-type ApiGearItem = {
-  id: string
-  name: string
-  brand?: string
-  pricePerDay: number
-  isAvailable: boolean
-  images: string[]
-  category: { id: string; name: string }
-}
 
 export async function FeaturedGear() {
   let items: ApiGearItem[] = []

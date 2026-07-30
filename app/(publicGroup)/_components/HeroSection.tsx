@@ -2,14 +2,14 @@ import Link from "next/link"
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-linear-to-b from-primary/5 to-background py-24 sm:py-32">
+    <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 to-background py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            Need Gear? Rent It Instead
+            Need Gear? Rent It Instead.
           </h1>
           <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            Discover a wide range of reliable equipment for work, sports, hobbies, and everyday tasks. Browse verified listings, book with confidence, and enjoy a simple, secure rental experience.
+            GearUp connects you with trusted local providers offering quality equipment for outdoor activities, work, and everyday use. Browse, compare, and rent the gear you need through a simple, secure, and reliable marketplace.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link

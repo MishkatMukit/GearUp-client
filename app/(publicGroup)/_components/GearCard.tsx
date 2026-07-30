@@ -1,25 +1,19 @@
+import Image from "next/image"
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
-
-export type GearCardProps = {
-  id: string
-  name: string
-  category: string
-  brand: string
-  pricePerDay: number
-  image: string
-  availability: boolean
-}
+import type { GearCardProps } from "@/lib/types"
 
 export function GearCard({ id, name, category, brand, pricePerDay, image, availability }: GearCardProps) {
   return (
     <Link href={`/gear/${id}`} className="block h-full">
       <Card className="group flex h-full flex-col overflow-hidden transition-all hover:shadow-md">
-        <div className="aspect-[4/3] overflow-hidden bg-muted">
-          <img
+        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+          <Image
             src={image}
             alt={name}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition-transform group-hover:scale-105"
           />
         </div>
         <div className="flex flex-1 flex-col space-y-2 p-4">

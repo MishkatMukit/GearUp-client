@@ -1,13 +1,8 @@
 import Link from "next/link"
 import { Tag } from "lucide-react"
+import type { ApiCategory } from "@/lib/types"
 
 const BACKEND_URL = process.env.BACKEND_API_URL ?? ""
-
-type ApiCategory = {
-  id: string
-  name: string
-  _count?: { gearItems: number }
-}
 
 export async function CategorySection() {
   let categories: ApiCategory[] = []

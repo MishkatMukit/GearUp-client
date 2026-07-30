@@ -1,7 +1,6 @@
 import { Suspense } from "react"
 import { HeroSection } from "@/app/(publicGroup)/_components/HeroSection"
 import { FeaturedGear } from "@/app/(publicGroup)/_components/FeaturedGear"
-import { CategorySection } from "@/app/(publicGroup)/_components/CategorySection"
 
 export const dynamic = "force-dynamic"
 
@@ -33,9 +32,6 @@ export default function HomePage() {
       <HeroSection />
       <Suspense fallback={<FeaturedGearSkeleton />}>
         <FeaturedGear />
-      </Suspense>
-      <Suspense fallback={null}>
-        <CategorySection />
       </Suspense>
     </>
   )
