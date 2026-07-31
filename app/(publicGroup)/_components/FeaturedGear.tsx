@@ -1,3 +1,5 @@
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { GearCard } from "./GearCard"
 import type { ApiGearItem } from "@/lib/types"
 
@@ -35,13 +37,20 @@ export async function FeaturedGear() {
   return (
     <section className="py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-end justify-between">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Featured Gear</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h2 className="text-3xl font-bold tracking-tight">Featured Gear</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
               Top picks for your next adventure
             </p>
           </div>
+          <Link
+            href="/gear"
+            className="hidden items-center gap-1 text-sm font-medium text-primary hover:underline sm:inline-flex"
+          >
+            View all gear
+            <ArrowRight className="size-4" />
+          </Link>
         </div>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {items.slice(0, 8).map((item) => (

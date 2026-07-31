@@ -11,7 +11,7 @@ export default async function PublicLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar user={user} />
+      <Navbar user={user} transparent />
       <main className="flex-1">{children}</main>
       <Footer />
     </div>

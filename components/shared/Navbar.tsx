@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -23,20 +23,41 @@ const navLinks = [
 
 type NavbarProps = {
   user?: UserType | null
+  transparent?: boolean
 }
 
-export function Navbar({ user }: NavbarProps) {
+export function Navbar({ user, transparent = false }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  const solid = !transparent || scrolled || isOpen
+  const overDark = transparent && !solid
 
   const initials = user?.name
     ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "?"
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 w-full border-b transition-colors",
+        solid
+          ? "border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
+          : "border-transparent bg-transparent",
+      )}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold tracking-tight">GearUp</span>
+          <span className={cn("text-xl font-bold tracking-tight", overDark && "text-white")}>
+            GearUp
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -44,7 +65,12 @@ export function Navbar({ user }: NavbarProps) {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className={cn(
+                "text-sm font-medium transition-colors",
+                overDark
+                  ? "text-white/80 hover:text-white"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
             >
               {link.label}
             </Link>
@@ -91,10 +117,19 @@ export function Navbar({ user }: NavbarProps) {
             </DropdownMenu>
           ) : (
             <>
-              <Button variant="ghost" size="sm" asChild>
+              <Button
+                variant={overDark ? "ghost" : "ghost"}
+                size="sm"
+                asChild
+                className={overDark ? "text-white hover:bg-white/10 hover:text-white" : undefined}
+              >
                 <Link href="/auth/login">Log In</Link>
               </Button>
-              <Button size="sm" asChild>
+              <Button
+                size="sm"
+                asChild
+                className={overDark ? "bg-white text-slate-900 hover:bg-white/90" : undefined}
+              >
                 <Link href="/auth/register">Sign Up</Link>
               </Button>
             </>
@@ -106,13 +141,18 @@ export function Navbar({ user }: NavbarProps) {
           className="flex items-center md:hidden"
           aria-label="Toggle menu"
         >
-          {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          {isOpen ? (
+            <X className="size-5" />
+          ) : (
+            <Menu className={cn("size-5", overDark && "text-white")} />
+          )}
         </button>
       </div>
 
       <div
         className={cn(
           "overflow-hidden border-t md:hidden transition-all duration-200",
+          solid ? "border-border" : "border-white/10",
           isOpen ? "max-h-64" : "max-h-0",
         )}
       >

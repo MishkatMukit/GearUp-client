@@ -11,7 +11,7 @@ export default async function AuthLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar user={user} />
-      <div className="flex flex-1 items-center justify-center px-4 py-12">
+      <div className="flex flex-1 items-center justify-center px-4 pt-16 py-12">
         <div className="w-full max-w-md space-y-6">
           {children}
         </div>
