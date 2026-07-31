@@ -8,7 +8,7 @@ export function Footer() {
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold tracking-tight">GearUp</span>
           </div>
-          <nav className="flex gap-6 text-sm text-muted-foreground">
+          {/* <nav className="flex gap-6 text-sm text-muted-foreground">
             <Link href="/gear" className="hover:text-foreground transition-colors">
               Browse Gear
             </Link>
@@ -18,9 +18,9 @@ export function Footer() {
             <Link href="/auth/register" className="hover:text-foreground transition-colors">
               Sign Up
             </Link>
-          </nav>
+          </nav> */}
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} GearUp. All rights reserved.
+            &copy; <span suppressHydrationWarning>{new Date().getFullYear()}</span> GearUp. All rights reserved.
           </p>
         </div>
       </div>

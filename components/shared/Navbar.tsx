@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
@@ -29,6 +30,7 @@ type NavbarProps = {
 export function Navbar({ user, transparent = false }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -37,8 +39,10 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  const solid = !transparent || scrolled || isOpen
-  const overDark = transparent && !solid
+  const isHome = pathname === "/"
+  const transparentMode = transparent && isHome
+  const solid = !transparentMode || scrolled || isOpen
+  const overDark = transparentMode && !solid
 
   const initials = user?.name
     ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
