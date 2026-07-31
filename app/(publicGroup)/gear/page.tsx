@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { GearSearchBar } from "@/app/(publicGroup)/gear/_components/GearSearchBar"
+import { GearSearchArea } from "@/app/(publicGroup)/gear/_components/GearSearchArea"
 import { GearFilters } from "@/app/(publicGroup)/gear/_components/GearFilters"
 import { GearGrid } from "@/app/(publicGroup)/gear/_components/GearGrid"
 import type { GearQuery } from "@/service/gear"
@@ -77,19 +77,17 @@ export default async function GearPage({ searchParams }: GearPageProps) {
           </p>
         </div>
 
-        <div className="mx-auto mt-8 max-w-xl">
-          <GearSearchBar />
-        </div>
+        <GearSearchArea>
+          <div className="mt-10 grid gap-8 lg:grid-cols-[240px_1fr]">
+            <Suspense fallback={<FiltersSkeleton />}>
+              <GearFilters query={query} />
+            </Suspense>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[240px_1fr]">
-          <Suspense fallback={<FiltersSkeleton />}>
-            <GearFilters query={query} />
-          </Suspense>
-
-          <Suspense fallback={<GridSkeleton />}>
-            <GearGrid query={query} />
-          </Suspense>
-        </div>
+            <Suspense fallback={<GridSkeleton />}>
+              <GearGrid query={query} />
+            </Suspense>
+          </div>
+        </GearSearchArea>
       </div>
     </section>
   )

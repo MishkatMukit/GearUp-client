@@ -37,12 +37,12 @@ export function HeroSection() {
             >
               Browse Gear
             </Link>
-            <Link
+            {/* <Link
               href="/auth/register"
               className="inline-flex h-11 items-center justify-center rounded-lg border border-white/30 bg-white/10 px-8 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-white/20"
             >
               Get Started
-            </Link>
+            </Link> */}
           </div>
           {/* <div className="mt-12 grid grid-cols-3 gap-4 border-t border-white/10 pt-8">
             <div className="text-center">
