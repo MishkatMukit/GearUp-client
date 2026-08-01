@@ -1,7 +1,15 @@
-import { PagePlaceholder } from "@/app/(dashboardGroup)/_components/PagePlaceholder"
+import { Suspense } from "react"
+import {
+  ProviderOverview,
+  ProviderOverviewSkeleton,
+} from "@/app/(dashboardGroup)/dashboard/provider/_components/ProviderOverview"
 
 export default function ProviderOverviewPage() {
   return (
-    <PagePlaceholder description="Your gear listed, active rentals, and pending orders will appear here." />
+    <div className="space-y-6">
+      <Suspense fallback={<ProviderOverviewSkeleton />}>
+        <ProviderOverview />
+      </Suspense>
+    </div>
   )
 }
