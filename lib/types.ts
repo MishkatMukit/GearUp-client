@@ -85,6 +85,11 @@ export type RentalState = {
   }
 }
 
+export type ProfileState = {
+  success: boolean
+  message: string
+}
+
 export type Role = "CUSTOMER" | "PROVIDER" | "ADMIN"
 
 export type LoginPayload = {

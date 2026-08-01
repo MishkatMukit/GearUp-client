@@ -4,9 +4,15 @@ export type User = {
   id: string
   name: string
   email: string
+  phone?: string
   role: "CUSTOMER" | "PROVIDER" | "ADMIN"
+  status?: string
+  createdAt?: string
+  updatedAt?: string
   profile?: {
     profilePhoto?: string
+    bio?: string
+    address?: string
   }
 }
 

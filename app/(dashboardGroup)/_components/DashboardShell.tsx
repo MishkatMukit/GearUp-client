@@ -12,20 +12,11 @@ import {
   ClipboardList,
   Users,
   Receipt,
+  UserRound,
   Menu,
   X,
-  LogOut,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { logoutAction } from "@/app/auth/_actions/logout"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
 import type { User } from "@/service/auth"
 
 type NavItem = {
@@ -39,17 +30,20 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
     { href: "/dashboard/customer", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/customer/orders", label: "My Orders", icon: Package },
     { href: "/dashboard/customer/payments", label: "Payments", icon: CreditCard },
+    { href: "/dashboard/profile", label: "Profile", icon: UserRound },
   ],
   PROVIDER: [
     { href: "/dashboard/provider", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/provider/gear", label: "My Gear", icon: Boxes },
     { href: "/dashboard/provider/orders", label: "Orders", icon: ClipboardList },
+    { href: "/dashboard/profile", label: "Profile", icon: UserRound },
   ],
   ADMIN: [
     { href: "/admin-dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/admin-dashboard/users", label: "Users", icon: Users },
     { href: "/admin-dashboard/gear", label: "Gear", icon: Boxes },
     { href: "/admin-dashboard/rentals", label: "Rentals", icon: Receipt },
+    { href: "/admin-dashboard/profile", label: "Profile", icon: UserRound },
   ],
 }
 
@@ -66,18 +60,12 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
   const activeItem = navItems.find(
     (item) => pathname === item.href || pathname.startsWith(item.href + "/"),
   )
-  const initials = user.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2)
 
   const sidebarContent = (
     <nav className="flex flex-col gap-1 p-4">
-      <Link href="/" className="mb-4 flex items-center gap-2 px-2">
+      <span  className="mb-4 flex items-center gap-2 px-2">
         <span className="text-xl font-bold tracking-tight">Dashboard</span>
-      </Link>
+      </span>
       {navItems.map((item) => {
         const Icon = item.icon
         const active = pathname === item.href || pathname.startsWith(item.href + "/")
@@ -140,39 +128,6 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
               {activeItem?.label ?? "Dashboard"}
             </h1>
           </div>
-
-          <DropdownMenu>
-            {/* <DropdownMenuTrigger asChild>
-              <button
-                className="flex items-center gap-2 rounded-full outline-none"
-                aria-label="User menu"
-              >
-                <Avatar className="size-8">
-                  <AvatarImage src={user.profile?.profilePhoto} alt={user.name} />
-                  <AvatarFallback>{initials}</AvatarFallback>
-                </Avatar>
-              </button>
-            </DropdownMenuTrigger> */}
-            <DropdownMenuContent align="end" className="w-48">
-              <div className="px-2 py-1.5 text-sm font-medium">{user.name}</div>
-              <div className="px-2 pb-1 text-xs text-muted-foreground">{user.email}</div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/" className="cursor-pointer">
-                  Home
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <form action={logoutAction}>
-                  <button type="submit" className="flex w-full items-center gap-2 text-destructive">
-                    <LogOut className="size-4" />
-                    Log Out
-                  </button>
-                </form>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </header>
 
         <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">{children}</main>

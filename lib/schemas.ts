@@ -24,3 +24,17 @@ export const createRentalSchema = z.object({
 })
 
 export type CreateRentalFormData = z.infer<typeof createRentalSchema>
+
+export const updateProfileSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  phone: z.string().max(20, "Phone number is too long").optional(),
+  profilePhoto: z
+    .string()
+    .url("Enter a valid image URL")
+    .or(z.literal(""))
+    .optional(),
+  bio: z.string().max(500, "Bio must be under 500 characters").optional(),
+  address: z.string().max(200, "Address must be under 200 characters").optional(),
+})
+
+export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>
