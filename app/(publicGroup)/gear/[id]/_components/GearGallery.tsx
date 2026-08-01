@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
 import Image from "next/image"
 import { ImageOff } from "lucide-react"
+import { useGearGalleryStore } from "@/stores/useGearGalleryStore"
 import { cn, normalizeImageUrl } from "@/lib/utils"
 
 type GearGalleryProps = {
@@ -11,7 +11,8 @@ type GearGalleryProps = {
 }
 
 export function GearGallery({ images, name }: GearGalleryProps) {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const activeIndex = useGearGalleryStore((s) => s.activeIndex)
+  const setActiveIndex = useGearGalleryStore((s) => s.setActiveIndex)
   const normalizedImages = images.map(normalizeImageUrl).filter((src): src is string => Boolean(src))
   const safeIndex = Math.min(activeIndex, Math.max(normalizedImages.length - 1, 0))
 

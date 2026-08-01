@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useMemo, useState } from "react"
+import { useActionState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import { CalendarCheck, CheckCircle2, LogIn } from "lucide-react"
 import { toast } from "sonner"
@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { createRentalAction } from "@/app/(publicGroup)/gear/[id]/_actions/createRental"
+import { useRentFormStore } from "@/stores/useRentFormStore"
+import { useUserStore } from "@/stores/useUserStore"
 import type { ApiGearDetail } from "@/lib/types"
 import type { User } from "@/service/auth"
 import { cn } from "@/lib/utils"
@@ -18,10 +20,15 @@ type RentNowCardProps = {
   user: User | null
 }
 
-export function RentNowCard({ gear, user }: RentNowCardProps) {
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
-  const [quantity, setQuantity] = useState(1)
+export function RentNowCard({ gear, user: serverUser }: RentNowCardProps) {
+  const user = useUserStore((s) => s.user)
+  const currentUser = user ?? serverUser
+  const startDate = useRentFormStore((s) => s.startDate)
+  const endDate = useRentFormStore((s) => s.endDate)
+  const quantity = useRentFormStore((s) => s.quantity)
+  const setStartDate = useRentFormStore((s) => s.setStartDate)
+  const setEndDate = useRentFormStore((s) => s.setEndDate)
+  const setQuantity = useRentFormStore((s) => s.setQuantity)
 
   const [state, formAction, pending] = useActionState(createRentalAction, {
     success: false,
@@ -52,7 +59,7 @@ export function RentNowCard({ gear, user }: RentNowCardProps) {
   const dateError = endDate && days < 1
   const disabled = !gear.isAvailable || gear.stock < 1
 
-  if (!user) {
+  if (!currentUser) {
     return (
       <Card className="lg:sticky lg:top-20">
         <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
@@ -78,7 +85,7 @@ export function RentNowCard({ gear, user }: RentNowCardProps) {
     )
   }
 
-  if (user.role !== "CUSTOMER") {
+  if (currentUser.role !== "CUSTOMER") {
     return (
       <Card className="lg:sticky lg:top-20">
         <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
