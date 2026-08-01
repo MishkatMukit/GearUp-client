@@ -48,6 +48,13 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
     ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "?"
 
+  const dashboardHref =
+    user?.role === "ADMIN"
+      ? "/admin-dashboard"
+      : user?.role === "PROVIDER"
+        ? "/dashboard/provider"
+        : "/dashboard/customer"
+
   return (
     <header
       className={cn(
@@ -97,7 +104,7 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
                 <div className="px-2 pb-1 text-xs text-muted-foreground">{user.email}</div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard" className="cursor-pointer">
+                  <Link href={dashboardHref} className="cursor-pointer">
                     <LayoutDashboard className="size-4" />
                     Dashboard
                   </Link>
@@ -169,7 +176,7 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
           {user ? (
             <>
               <Link
-                href="/dashboard"
+                href={dashboardHref}
                 onClick={() => setIsOpen(false)}
                 className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
               >
