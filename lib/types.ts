@@ -92,6 +92,46 @@ export type ProfileState = {
 
 export type Role = "CUSTOMER" | "PROVIDER" | "ADMIN"
 
+export type RentalStatus = "PLACED" | "CONFIRMED" | "PAID" | "PICKED_UP" | "RETURNED" | "CANCELLED"
+
+export type PaymentStatus = "PENDING" | "COMPLETED" | "FAILED"
+
+export type ApiPayment = {
+  id: string
+  transactionId: string
+  rentalOrderId: string
+  amount: number
+  status: PaymentStatus
+  stripeSessionId?: string
+  paidAt?: string
+  createdAt: string
+  updatedAt: string
+  rentalOrder?: ApiRentalOrder
+}
+
+export type ApiRentalOrder = {
+  id: string
+  customerId: string
+  gearItemId: string
+  gearItem?: {
+    id: string
+    name: string
+    brand?: string
+    images: string[]
+    category?: { id: string; name: string }
+  }
+  status: RentalStatus
+  startDate: string
+  endDate: string
+  quantity: number
+  days: number
+  pricePerDay: number
+  totalAmount: number
+  payment?: ApiPayment | null
+  createdAt: string
+  updatedAt: string
+}
+
 export type LoginPayload = {
   email: string
   password: string
