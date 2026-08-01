@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import { SlidersHorizontal, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useUiStore } from "@/stores/useUiStore"
 
 export function MobileFiltersDrawer({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
+  const open = useUiStore((s) => s.mobileFiltersOpen)
+  const setMobileFiltersOpen = useUiStore((s) => s.setMobileFiltersOpen)
 
   return (
     <>
@@ -13,7 +14,7 @@ export function MobileFiltersDrawer({ children }: { children: React.ReactNode })
         type="button"
         variant="outline"
         size="sm"
-        onClick={() => setOpen(true)}
+        onClick={() => setMobileFiltersOpen(true)}
         className="lg:hidden"
       >
         <SlidersHorizontal className="size-4" />
@@ -24,7 +25,7 @@ export function MobileFiltersDrawer({ children }: { children: React.ReactNode })
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
             className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={() => setOpen(false)}
+            onClick={() => setMobileFiltersOpen(false)}
           />
           <div className="absolute inset-y-0 left-0 flex w-full max-w-sm flex-col border-r bg-background shadow-xl">
             <div className="flex items-center justify-between border-b px-4 py-3">
@@ -33,7 +34,7 @@ export function MobileFiltersDrawer({ children }: { children: React.ReactNode })
                 Filters
               </h2>
               <button
-                onClick={() => setOpen(false)}
+                onClick={() => setMobileFiltersOpen(false)}
                 aria-label="Close filters"
                 className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >

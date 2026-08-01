@@ -1,16 +1,18 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useActionState, useEffect } from "react"
+import { useActionState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { registerAction } from "@/app/auth/_actions/register"
+import { useRegisterStore } from "@/stores/useRegisterStore"
 import { toast } from "sonner"
 
 export default function RegisterPage() {
-  const [role, setRole] = useState<"CUSTOMER" | "PROVIDER">("CUSTOMER")
+  const role = useRegisterStore((s) => s.role)
+  const setRole = useRegisterStore((s) => s.setRole)
   const [state, formAction, pending] = useActionState(
     registerAction,
     { success: false, statusCode: 0, message: "" },
