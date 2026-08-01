@@ -35,7 +35,7 @@ export function GearPagination({ total, page, limit, query }: GearPaginationProp
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   return (
-    <nav className="mt-10 flex items-center justify-center gap-1" aria-label="Pagination">
+    <nav className="mt-8 flex items-center justify-center gap-1" aria-label="Pagination">
       <Link
         href={buildPageUrl(page - 1)}
         aria-disabled={page === 1}

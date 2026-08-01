@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { GearCard } from "@/app/(publicGroup)/_components/GearCard"
 import { GearPagination } from "@/app/(publicGroup)/gear/_components/GearPagination"
+import { GearSort } from "@/app/(publicGroup)/gear/_components/GearSort"
 import { getGearList, type GearQuery } from "@/service/gear"
 
 export async function GearGrid({ query }: { query: GearQuery }) {
@@ -8,10 +9,13 @@ export async function GearGrid({ query }: { query: GearQuery }) {
 
   return (
     <div>
-      <p className="mb-4 text-sm text-muted-foreground">
-        Showing <span className="font-medium text-foreground">{items.length}</span> of{" "}
-        <span className="font-medium text-foreground">{meta.total}</span> gear items
-      </p>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          Showing <span className="font-medium text-foreground">{items.length}</span> of{" "}
+          <span className="font-medium text-foreground">{meta.total}</span> gear items
+        </p>
+        <GearSort sortBy={query.sortBy ?? "createdAt"} sortOrder={query.sortOrder ?? "desc"} />
+      </div>
 
       {items.length === 0 ? (
         <div className="rounded-xl border bg-card py-16 text-center shadow-sm">
@@ -27,7 +31,7 @@ export async function GearGrid({ query }: { query: GearQuery }) {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {items.map((item) => (
             <GearCard
               key={item.id}

@@ -7,7 +7,7 @@ export function GearCard({ id, name, category, brand, pricePerDay, image, availa
   return (
     <Link href={`/gear/${id}`} className="block h-full">
       <Card className="group flex h-full flex-col overflow-hidden transition-all hover:shadow-md">
-        <div className="relative aspect-4/3 overflow-hidden bg-muted">
+        <div className="relative aspect-16/10 overflow-hidden bg-muted">
           <Image
             src={image}
             alt={name}

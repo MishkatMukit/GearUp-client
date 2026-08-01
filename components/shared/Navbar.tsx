@@ -97,15 +97,15 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
                 <div className="px-2 pb-1 text-xs text-muted-foreground">{user.email}</div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard" className="cursor-pointer">
-                    <LayoutDashboard className="size-4" />
-                    Dashboard
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
                   <Link href="/profile" className="cursor-pointer">
                     <User className="size-4" />
                     Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard" className="cursor-pointer">
+                    <LayoutDashboard className="size-4" />
+                    Dashboard
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
