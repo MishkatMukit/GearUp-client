@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/table"
 import { RentalStatusBadge } from "@/components/shared/StatusBadge"
 import type { ApiRentalOrder } from "@/lib/types"
-import { GearThumb } from "@/app/(dashboardGroup)/dashboard/customer/_components/GearThumb"
-import { formatDate, formatMoney } from "@/app/(dashboardGroup)/dashboard/customer/_components/format"
+import { GearThumb } from "@/components/shared/GearThumb"
+import { formatDate, formatMoney } from "@/lib/format"
 
 export function OrdersTable({ rentals, limit }: { rentals: ApiRentalOrder[]; limit?: number }) {
   const rows = limit ? rentals.slice(0, limit) : rentals

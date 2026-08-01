@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table"
 import { PaymentStatusBadge } from "@/components/shared/StatusBadge"
 import type { ApiPayment } from "@/lib/types"
-import { formatDateTime, formatMoney } from "@/app/(dashboardGroup)/dashboard/customer/_components/format"
+import { formatDateTime, formatMoney } from "@/lib/format"
 
 export function PaymentsTable({ payments, limit }: { payments: ApiPayment[]; limit?: number }) {
   const rows = limit ? payments.slice(0, limit) : payments
