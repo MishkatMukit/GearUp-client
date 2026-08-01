@@ -1,29 +1,52 @@
 import { cookies } from "next/headers"
+import { unstable_cache } from "next/cache"
 import type { ApiPayment, ApiRentalOrder } from "@/lib/types"
 
 const BACKEND_URL = process.env.BACKEND_API_URL ?? ""
 
-const authHeaders = async (): Promise<Record<string, string>> => {
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get("accessToken")?.value
-  if (!accessToken) return {}
-  return { Cookie: `accessToken=${accessToken}` }
-}
-
-export const getMyRentals = async (): Promise<ApiRentalOrder[]> => {
-  try {
-    const headers = await authHeaders()
-    if (!headers.Cookie) return []
-
+const fetchMyRentals = unstable_cache(
+  async (accessToken: string) => {
     const res = await fetch(`${BACKEND_URL}/api/rentals`, {
-      headers,
-      cache: "no-store",
+      headers: { Cookie: `accessToken=${accessToken}` },
     })
     if (!res.ok) return []
 
     const body = await res.json()
     const raw = body.data ?? body
     return Array.isArray(raw) ? raw : []
+  },
+  ["my-rentals-cache"],
+  {
+    tags: ["my-rentals"],
+    revalidate: 60,
+  }
+)
+
+const fetchMyPayments = unstable_cache(
+  async (accessToken: string) => {
+    const res = await fetch(`${BACKEND_URL}/api/payments`, {
+      headers: { Cookie: `accessToken=${accessToken}` },
+    })
+    if (!res.ok) return []
+
+    const body = await res.json()
+    const raw = body.data ?? body
+    return Array.isArray(raw) ? raw : []
+  },
+  ["my-payments-cache"],
+  {
+    tags: ["my-payments"],
+    revalidate: 60,
+  }
+)
+
+export const getMyRentals = async (): Promise<ApiRentalOrder[]> => {
+  try {
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get("accessToken")?.value
+    if (!accessToken) return []
+
+    return await fetchMyRentals(accessToken)
   } catch {
     return []
   }
@@ -31,18 +54,11 @@ export const getMyRentals = async (): Promise<ApiRentalOrder[]> => {
 
 export const getMyPayments = async (): Promise<ApiPayment[]> => {
   try {
-    const headers = await authHeaders()
-    if (!headers.Cookie) return []
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get("accessToken")?.value
+    if (!accessToken) return []
 
-    const res = await fetch(`${BACKEND_URL}/api/payments`, {
-      headers,
-      cache: "no-store",
-    })
-    if (!res.ok) return []
-
-    const body = await res.json()
-    const raw = body.data ?? body
-    return Array.isArray(raw) ? raw : []
+    return await fetchMyPayments(accessToken)
   } catch {
     return []
   }

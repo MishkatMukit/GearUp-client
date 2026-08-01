@@ -58,7 +58,7 @@ export default function HomePage() {
         <FeaturedGear />
       </Suspense>
       <HowItWorks />
-      <CTASection />
+      {/* <CTASection /> */}
     </>
   )
 }

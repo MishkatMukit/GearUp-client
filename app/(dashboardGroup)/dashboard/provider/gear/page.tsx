@@ -2,9 +2,6 @@ import { PagePlaceholder } from "@/app/(dashboardGroup)/_components/PagePlacehol
 
 export default function ProviderGearPage() {
   return (
-    <PagePlaceholder
-      title="My Gear"
-      description="Add, edit, and manage your gear inventory here."
-    />
+    <PagePlaceholder description="Add, edit, and manage your gear inventory here." />
   )
 }

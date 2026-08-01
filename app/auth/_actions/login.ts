@@ -33,6 +33,11 @@ export const loginAction = async (redirectTo: string, prevState: LoginState, for
 
     const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload
 
+    const { revalidateTag } = await import("next/cache")
+    revalidateTag("my-profile", "max")
+    revalidateTag("my-rentals", "max")
+    revalidateTag("my-payments", "max")
+
     if (redirectTo && typeof redirectTo === "string" && redirectTo.startsWith("/") && !redirectTo.startsWith("//")) {
       redirect(redirectTo)
     }

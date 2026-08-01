@@ -2,9 +2,6 @@ import { PagePlaceholder } from "@/app/(dashboardGroup)/_components/PagePlacehol
 
 export default function ProviderOverviewPage() {
   return (
-    <PagePlaceholder
-      title="Provider Overview"
-      description="Your gear listed, active rentals, and pending orders will appear here."
-    />
+    <PagePlaceholder description="Your gear listed, active rentals, and pending orders will appear here." />
   )
 }

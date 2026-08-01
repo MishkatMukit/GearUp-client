@@ -2,9 +2,6 @@ import { PagePlaceholder } from "@/app/(dashboardGroup)/_components/PagePlacehol
 
 export default function AdminRentalsPage() {
   return (
-    <PagePlaceholder
-      title="Rentals"
-      description="Inspect all rental orders across the platform."
-    />
+    <PagePlaceholder description="Inspect all rental orders across the platform." />
   )
 }

@@ -2,9 +2,6 @@ import { PagePlaceholder } from "@/app/(dashboardGroup)/_components/PagePlacehol
 
 export default function ProviderOrdersPage() {
   return (
-    <PagePlaceholder
-      title="Orders"
-      description="Incoming rental orders with status update actions will appear here."
-    />
+    <PagePlaceholder description="Incoming rental orders with status update actions will appear here." />
   )
 }

@@ -21,12 +21,6 @@ async function PaymentsList() {
 export default function CustomerPaymentsPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Payments</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Your payment history for past rentals.
-        </p>
-      </div>
       <Suspense fallback={<PaymentsTableSkeleton />}>
         <PaymentsList />
       </Suspense>

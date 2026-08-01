@@ -12,7 +12,8 @@ export function HeroSection() {
         alt="Outdoor gear rental"
         fill
         priority
-        sizes="100vw"
+        quality={55}
+        sizes="(max-width: 640px) 100vw, 50vw"
         className="object-cover object-center opacity-40"
       />
       <div className="absolute inset-0 bg-linear-to-b from-slate-950/70 via-slate-950/40 to-slate-950" />
