@@ -2,7 +2,8 @@
 
 import { useActionState, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Pencil, Mail, Phone, MapPin, X } from "lucide-react"
+import Image from "next/image"
+import { Pencil, Mail, Phone, MapPin, X, Camera, LoaderCircle } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,6 +11,8 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { updateProfileAction } from "@/app/(dashboardGroup)/_actions/updateProfile"
+import { uploadImageToCloudinary } from "@/lib/cloudinary"
+import { cn, normalizeImageUrl } from "@/lib/utils"
 import type { User } from "@/service/auth"
 
 type ProfileSectionProps = {
@@ -18,6 +21,9 @@ type ProfileSectionProps = {
 
 export function ProfileSection({ user }: ProfileSectionProps) {
   const [editing, setEditing] = useState(false)
+  const [photoUrl, setPhotoUrl] = useState(user.profile?.profilePhoto ?? "")
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState("")
   const router = useRouter()
 
   const [state, formAction, pending] = useActionState(updateProfileAction, {
@@ -38,12 +44,48 @@ export function ProfileSection({ user }: ProfileSectionProps) {
     toast.error(state.message)
   }, [state, router])
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ""
+    if (!file) return
+
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Please choose an image file")
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError("Image must be under 5MB")
+      return
+    }
+
+    setUploading(true)
+    setUploadError("")
+
+    try {
+      const url = await uploadImageToCloudinary(file)
+      setPhotoUrl(url)
+    } catch {
+      setUploadError("Upload failed. Please try again.")
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const initials = user.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase()
     .slice(0, 2)
+
+  const previewSrc = normalizeImageUrl(photoUrl)
+
+  const startEditing = () => {
+    setPhotoUrl(user.profile?.profilePhoto ?? "")
+    setUploadError("")
+    setEditing(true)
+  }
 
   const joinedYear = user.createdAt
     ? new Date(user.createdAt).getFullYear()
@@ -88,14 +130,52 @@ export function ProfileSection({ user }: ProfileSectionProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="profilePhoto">Profile photo URL</Label>
-              <Input
-                id="profilePhoto"
-                name="profilePhoto"
-                type="url"
-                placeholder="https://example.com/photo.jpg"
-                defaultValue={user.profile?.profilePhoto ?? ""}
-              />
+              <Label>Profile photo</Label>
+              <div className="flex items-center gap-4">
+                <div className="relative size-20 overflow-hidden rounded-full border bg-muted">
+                  {previewSrc ? (
+                    <Image
+                      src={previewSrc}
+                      alt="Profile preview"
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="flex size-full items-center justify-center text-2xl font-semibold text-muted-foreground">
+                      {initials}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <label
+                    className={cn(
+                      "inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
+                      uploading
+                        ? "pointer-events-none cursor-not-allowed opacity-60"
+                        : "cursor-pointer hover:bg-muted",
+                    )}
+                  >
+                    {uploading ? (
+                      <LoaderCircle className="size-4 animate-spin" />
+                    ) : (
+                      <Camera className="size-4" />
+                    )}
+                    {uploading ? "Uploading..." : photoUrl ? "Change photo" : "Upload photo"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="sr-only"
+                      onChange={handleFileChange}
+                      disabled={uploading}
+                    />
+                  </label>
+                  {uploadError && (
+                    <p className="mt-1 text-xs text-destructive">{uploadError}</p>
+                  )}
+                </div>
+              </div>
+              <input type="hidden" name="profilePhoto" value={photoUrl} />
             </div>
 
             <div className="space-y-2">
@@ -125,7 +205,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
             )}
 
             <div className="flex gap-3 pt-2">
-              <Button type="submit" disabled={pending}>
+              <Button type="submit" disabled={pending || uploading}>
                 {pending ? "Saving..." : "Save Changes"}
               </Button>
               <Button type="button" variant="outline" onClick={() => setEditing(false)}>
@@ -144,7 +224,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="size-16">
-              <AvatarImage src={user.profile?.profilePhoto} alt={user.name} />
+              <AvatarImage src={normalizeImageUrl(user.profile?.profilePhoto)} alt={user.name} />
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div>
@@ -165,7 +245,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setEditing(true)}
+            onClick={startEditing}
             className="shrink-0"
           >
             <Pencil className="size-4" />

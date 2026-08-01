@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { ImageOff } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn, normalizeImageUrl } from "@/lib/utils"
 
 type GearGalleryProps = {
   images: string[]
@@ -12,8 +12,10 @@ type GearGalleryProps = {
 
 export function GearGallery({ images, name }: GearGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const normalizedImages = images.map(normalizeImageUrl).filter((src): src is string => Boolean(src))
+  const safeIndex = Math.min(activeIndex, Math.max(normalizedImages.length - 1, 0))
 
-  if (images.length === 0) {
+  if (normalizedImages.length === 0) {
     return (
       <div className="flex aspect-4/3 w-full items-center justify-center rounded-xl border bg-muted">
         <ImageOff className="size-10 text-muted-foreground" />
@@ -21,7 +23,7 @@ export function GearGallery({ images, name }: GearGalleryProps) {
     )
   }
 
-  const activeImage = images[activeIndex]
+  const activeImage = normalizedImages[safeIndex]
 
   return (
     <div>
@@ -36,9 +38,9 @@ export function GearGallery({ images, name }: GearGalleryProps) {
         />
       </div>
 
-      {images.length > 1 && (
+      {normalizedImages.length > 1 && (
         <div className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-5 lg:grid-cols-4">
-          {images.map((image, index) => (
+          {normalizedImages.map((image, index) => (
             <button
               key={image}
               type="button"
@@ -46,7 +48,7 @@ export function GearGallery({ images, name }: GearGalleryProps) {
               aria-label={`View image ${index + 1}`}
               className={cn(
                 "relative aspect-4/3 overflow-hidden rounded-lg border bg-muted transition-colors",
-                index === activeIndex
+                index === safeIndex
                   ? "border-primary ring-2 ring-primary/40"
                   : "border-border hover:border-primary/50",
               )}

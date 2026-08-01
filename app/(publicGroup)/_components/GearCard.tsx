@@ -1,20 +1,29 @@
 import Image from "next/image"
 import Link from "next/link"
+import { ImageOff } from "lucide-react"
 import { Card } from "@/components/ui/card"
+import { normalizeImageUrl } from "@/lib/utils"
 import type { GearCardProps } from "@/lib/types"
 
 export function GearCard({ id, name, category, brand, pricePerDay, image, availability }: GearCardProps) {
+  const imageSrc = normalizeImageUrl(image)
   return (
     <Link href={`/gear/${id}`} className="block h-full">
       <Card className="group flex h-full flex-col overflow-hidden transition-all hover:shadow-md">
         <div className="relative aspect-16/10 overflow-hidden bg-muted">
-          <Image
-            src={image}
-            alt={name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition-transform group-hover:scale-105"
-          />
+          {imageSrc ? (
+            <Image
+              src={imageSrc}
+              alt={name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition-transform group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex size-full items-center justify-center">
+              <ImageOff className="size-8 text-muted-foreground" />
+            </div>
+          )}
         </div>
         <div className="flex flex-1 flex-col space-y-2 p-4">
           <div className="flex items-center justify-between gap-2">

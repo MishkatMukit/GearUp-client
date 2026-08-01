@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { logoutAction } from "@/app/auth/_actions/logout"
-import { cn } from "@/lib/utils"
+import { cn, normalizeImageUrl } from "@/lib/utils"
 import type { User as UserType } from "@/service/auth"
 
 const navLinks = [
@@ -94,7 +94,7 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 rounded-full outline-none" aria-label="User menu">
                   <Avatar className="size-8">
-                    <AvatarImage src={user.profile?.profilePhoto} alt={user.name} />
+                    <AvatarImage src={normalizeImageUrl(user.profile?.profilePhoto)} alt={user.name} />
                     <AvatarFallback>{initials}</AvatarFallback>
                   </Avatar>
                 </button>

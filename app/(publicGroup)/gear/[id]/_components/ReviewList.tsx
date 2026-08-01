@@ -1,7 +1,7 @@
 import { Star } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { cn, normalizeImageUrl } from "@/lib/utils"
 import type { ApiReview } from "@/lib/types"
-import { cn } from "@/lib/utils"
 
 export function ReviewList({ reviews }: { reviews: ApiReview[] }) {
   const initials = (name: string) =>
@@ -27,7 +27,7 @@ export function ReviewList({ reviews }: { reviews: ApiReview[] }) {
               <div className="flex items-center gap-3">
                 <Avatar className="size-9">
                   <AvatarImage
-                    src={review.customer?.profile?.profilePhoto}
+                    src={normalizeImageUrl(review.customer?.profile?.profilePhoto)}
                     alt={review.customer?.name ?? "Customer"}
                   />
                   <AvatarFallback>{initials(review.customer?.name ?? "?")}</AvatarFallback>

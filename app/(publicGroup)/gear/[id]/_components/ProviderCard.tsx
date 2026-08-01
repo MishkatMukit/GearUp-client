@@ -1,6 +1,7 @@
 import { Mail, MapPin } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
+import { normalizeImageUrl } from "@/lib/utils"
 import type { ApiGearDetail } from "@/lib/types"
 
 export function ProviderCard({ gear }: { gear: ApiGearDetail }) {
@@ -17,7 +18,7 @@ export function ProviderCard({ gear }: { gear: ApiGearDetail }) {
     <Card>
       <CardContent className="flex items-center gap-4 p-6">
         <Avatar className="size-14">
-          <AvatarImage src={provider.profile?.profilePhoto} alt={provider.name} />
+          <AvatarImage src={normalizeImageUrl(provider.profile?.profilePhoto)} alt={provider.name} />
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
