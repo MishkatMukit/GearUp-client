@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/shared/Navbar"
 import { Footer } from "@/components/shared/Footer"
+import { UserProvider } from "@/components/providers/UserProvider"
 import { getMe } from "@/service/auth"
 
 export default async function PublicLayout({
@@ -10,10 +11,12 @@ export default async function PublicLayout({
   const user = await getMe()
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar user={user} transparent />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
+    <UserProvider user={user}>
+      <div className="flex min-h-screen flex-col">
+        <Navbar user={user} transparent />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
+    </UserProvider>
   )
 }
