@@ -8,6 +8,8 @@ export type GearCardProps = {
   availability: boolean
 }
 
+import type { User } from "@/service/auth"
+
 export type ApiGearItem = {
   id: string
   name: string
@@ -88,6 +90,7 @@ export type RentalState = {
 export type ProfileState = {
   success: boolean
   message: string
+  user?: User
 }
 
 export type Role = "CUSTOMER" | "PROVIDER" | "ADMIN"

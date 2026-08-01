@@ -49,7 +49,7 @@ export const updateProfileAction = async (
 
     if (res.ok && result.success) {
       revalidateTag("my-profile", { expire: 0 })
-      return { success: true, message: "Profile updated successfully" }
+      return { success: true, message: "Profile updated successfully", user: result.data }
     }
 
     return { success: false, message: result.message ?? "Failed to update profile" }

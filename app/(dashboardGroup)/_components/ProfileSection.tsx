@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useState } from "react"
+import { useActionState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Pencil, Mail, Phone, MapPin, X, Camera, LoaderCircle } from "lucide-react"
@@ -12,6 +12,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { updateProfileAction } from "@/app/(dashboardGroup)/_actions/updateProfile"
 import { uploadImageToCloudinary } from "@/lib/cloudinary"
+import { useUserStore } from "@/stores/useUserStore"
+import { useProfileFormStore } from "@/stores/useProfileFormStore"
 import { cn, normalizeImageUrl } from "@/lib/utils"
 import type { User } from "@/service/auth"
 
@@ -19,11 +21,19 @@ type ProfileSectionProps = {
   user: User
 }
 
-export function ProfileSection({ user }: ProfileSectionProps) {
-  const [editing, setEditing] = useState(false)
-  const [photoUrl, setPhotoUrl] = useState(user.profile?.profilePhoto ?? "")
-  const [uploading, setUploading] = useState(false)
-  const [uploadError, setUploadError] = useState("")
+export function ProfileSection({ user: serverUser }: ProfileSectionProps) {
+  const user = useUserStore((s) => s.user)
+  const currentUser = user ?? serverUser
+  const setUser = useUserStore((s) => s.setUser)
+  const editing = useProfileFormStore((s) => s.editing)
+  const photoUrl = useProfileFormStore((s) => s.photoUrl)
+  const uploading = useProfileFormStore((s) => s.uploading)
+  const uploadError = useProfileFormStore((s) => s.uploadError)
+  const setPhotoUrl = useProfileFormStore((s) => s.setPhotoUrl)
+  const setUploading = useProfileFormStore((s) => s.setUploading)
+  const setUploadError = useProfileFormStore((s) => s.setUploadError)
+  const startEditing = useProfileFormStore((s) => s.startEditing)
+  const stopEditing = useProfileFormStore((s) => s.stopEditing)
   const router = useRouter()
 
   const [state, formAction, pending] = useActionState(updateProfileAction, {
@@ -36,13 +46,14 @@ export function ProfileSection({ user }: ProfileSectionProps) {
 
     if (state.success) {
       toast.success(state.message)
-      const timer = window.setTimeout(() => setEditing(false), 0)
+      if (state.user) setUser(state.user)
+      const timer = window.setTimeout(() => stopEditing(), 0)
       router.refresh()
       return () => window.clearTimeout(timer)
     }
 
     toast.error(state.message)
-  }, [state, router])
+  }, [state, router, stopEditing, setUser])
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -72,7 +83,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
     }
   }
 
-  const initials = user.name
+  const initials = currentUser.name
     .split(" ")
     .map((n) => n[0])
     .join("")
@@ -81,20 +92,14 @@ export function ProfileSection({ user }: ProfileSectionProps) {
 
   const previewSrc = normalizeImageUrl(photoUrl)
 
-  const startEditing = () => {
-    setPhotoUrl(user.profile?.profilePhoto ?? "")
-    setUploadError("")
-    setEditing(true)
-  }
-
-  const joinedYear = user.createdAt
-    ? new Date(user.createdAt).getFullYear()
+  const joinedYear = currentUser.createdAt
+    ? new Date(currentUser.createdAt).getFullYear()
     : null
 
   const infoItems = [
-    { icon: Mail, label: "Email", value: user.email },
-    { icon: Phone, label: "Phone", value: user.phone || "—" },
-    { icon: MapPin, label: "Address", value: user.profile?.address || "—" },
+    { icon: Mail, label: "Email", value: currentUser.email },
+    { icon: Phone, label: "Phone", value: currentUser.phone || "—" },
+    { icon: MapPin, label: "Address", value: currentUser.profile?.address || "—" },
   ]
 
   if (editing) {
@@ -104,7 +109,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Edit Profile</h2>
             <button
-              onClick={() => setEditing(false)}
+              onClick={() => stopEditing()}
               aria-label="Cancel editing"
               className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
@@ -115,7 +120,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
           <form action={formAction} className="mt-6 space-y-5">
             <div className="space-y-2">
               <Label htmlFor="name">Full name</Label>
-              <Input id="name" name="name" defaultValue={user.name} required />
+              <Input id="name" name="name" defaultValue={currentUser.name} required />
             </div>
 
             <div className="space-y-2">
@@ -125,7 +130,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
                 name="phone"
                 type="tel"
                 placeholder="e.g. +880 555 000 1234"
-                defaultValue={user.phone ?? ""}
+                defaultValue={currentUser.phone ?? ""}
               />
             </div>
 
@@ -185,7 +190,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
                 name="bio"
                 rows={4}
                 placeholder="state your interests"
-                defaultValue={user.profile?.bio ?? ""}
+                defaultValue={currentUser.profile?.bio ?? ""}
                 className="flex min-h-20 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               />
             </div>
@@ -196,7 +201,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
                 id="address"
                 name="address"
                 placeholder="City, area"
-                defaultValue={user.profile?.address ?? ""}
+                defaultValue={currentUser.profile?.address ?? ""}
               />
             </div>
 
@@ -208,7 +213,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
               <Button type="submit" disabled={pending || uploading}>
                 {pending ? "Saving..." : "Save Changes"}
               </Button>
-              <Button type="button" variant="outline" onClick={() => setEditing(false)}>
+              <Button type="button" variant="outline" onClick={() => stopEditing()}>
                 Cancel
               </Button>
             </div>
@@ -224,15 +229,15 @@ export function ProfileSection({ user }: ProfileSectionProps) {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-4">
             <Avatar className="size-16">
-              <AvatarImage src={normalizeImageUrl(user.profile?.profilePhoto)} alt={user.name} />
+              <AvatarImage src={normalizeImageUrl(currentUser.profile?.profilePhoto)} alt={currentUser.name} />
               <AvatarFallback>{initials}</AvatarFallback>
             </Avatar>
             <div>
               <span className="mt-1 inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                {user.role}
+                {currentUser.role}
               </span>
-              <h2 className="text-lg font-semibold">{user.name}</h2>
-              <p className="text-sm text-muted-foreground">{user.email}</p>
+              <h2 className="text-lg font-semibold">{currentUser.name}</h2>
+              <p className="text-sm text-muted-foreground">{currentUser.email}</p>
               
               {joinedYear && (
                 <p className="mt-1 text-xs text-muted-foreground">
@@ -245,7 +250,7 @@ export function ProfileSection({ user }: ProfileSectionProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={startEditing}
+            onClick={() => startEditing(currentUser.profile?.profilePhoto ?? "")}
             className="shrink-0"
           >
             <Pencil className="size-4" />
@@ -264,8 +269,8 @@ export function ProfileSection({ user }: ProfileSectionProps) {
               </div>
             )
           })}
-          {user.profile?.bio && (
-            <p className="pt-2 text-sm leading-7 text-muted-foreground">{user.profile.bio}</p>
+          {currentUser.profile?.bio && (
+            <p className="pt-2 text-sm leading-7 text-muted-foreground">{currentUser.profile.bio}</p>
           )}
         </div>
       </CardContent>
