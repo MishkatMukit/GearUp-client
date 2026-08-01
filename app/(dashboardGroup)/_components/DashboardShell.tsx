@@ -76,7 +76,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
   const sidebarContent = (
     <nav className="flex flex-col gap-1 p-4">
       <Link href="/" className="mb-4 flex items-center gap-2 px-2">
-        <span className="text-xl font-bold tracking-tight">GearUp</span>
+        <span className="text-xl font-bold tracking-tight">Dashboard</span>
       </Link>
       {navItems.map((item) => {
         const Icon = item.icon
@@ -103,7 +103,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
 
   return (
     <div className="min-h-screen">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r bg-card lg:block">
+      <aside className="fixed top-16 bottom-0 left-0 z-40 hidden w-64 border-r bg-card lg:block">
         {sidebarContent}
       </aside>
 
@@ -127,7 +127,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
       )}
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur sm:px-6">
+        <header className="sticky top-16 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur sm:px-6">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsOpen(true)}
@@ -142,7 +142,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
           </div>
 
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            {/* <DropdownMenuTrigger asChild>
               <button
                 className="flex items-center gap-2 rounded-full outline-none"
                 aria-label="User menu"
@@ -152,7 +152,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
                   <AvatarFallback>{initials}</AvatarFallback>
                 </Avatar>
               </button>
-            </DropdownMenuTrigger>
+            </DropdownMenuTrigger> */}
             <DropdownMenuContent align="end" className="w-48">
               <div className="px-2 py-1.5 text-sm font-medium">{user.name}</div>
               <div className="px-2 pb-1 text-xs text-muted-foreground">{user.email}</div>

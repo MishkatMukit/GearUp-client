@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation"
 import { getMe } from "@/service/auth"
+import { Navbar } from "@/components/shared/Navbar"
 import { DashboardShell } from "@/app/(dashboardGroup)/_components/DashboardShell"
 
 export default async function DashboardLayout({
@@ -11,5 +12,10 @@ export default async function DashboardLayout({
 
   if (!user) redirect("/auth/login")
 
-  return <DashboardShell user={user}>{children}</DashboardShell>
+  return (
+    <div className="pt-16">
+      <Navbar user={user} />
+      <DashboardShell user={user}>{children}</DashboardShell>
+    </div>
+  )
 }
