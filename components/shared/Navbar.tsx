@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Menu, X, LogOut, LayoutDashboard } from "lucide-react"
@@ -14,6 +14,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { logoutAction } from "@/app/auth/_actions/logout"
+import { useUserStore } from "@/stores/useUserStore"
+import { useUiStore } from "@/stores/useUiStore"
 import { cn, normalizeImageUrl } from "@/lib/utils"
 import type { User as UserType } from "@/service/auth"
 
@@ -27,9 +29,13 @@ type NavbarProps = {
   transparent?: boolean
 }
 
-export function Navbar({ user, transparent = false }: NavbarProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+export function Navbar({ user: serverUser, transparent = false }: NavbarProps) {
+  const user = useUserStore((s) => s.user)
+  const currentUser = user ?? serverUser
+  const isOpen = useUiStore((s) => s.mobileNavOpen)
+  const scrolled = useUiStore((s) => s.scrolled)
+  const setMobileNavOpen = useUiStore((s) => s.setMobileNavOpen)
+  const setScrolled = useUiStore((s) => s.setScrolled)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -37,21 +43,21 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
     onScroll()
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+  }, [setScrolled])
 
   const isHome = pathname === "/"
   const transparentMode = transparent && isHome
   const solid = !transparentMode || scrolled || isOpen
   const overDark = transparentMode && !solid
 
-  const initials = user?.name
-    ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+  const initials = currentUser?.name
+    ? currentUser.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "?"
 
   const dashboardHref =
-    user?.role === "ADMIN"
+    currentUser?.role === "ADMIN"
       ? "/admin-dashboard"
-      : user?.role === "PROVIDER"
+      : currentUser?.role === "PROVIDER"
         ? "/dashboard/provider"
         : "/dashboard/customer"
 
@@ -89,19 +95,19 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          {user ? (
+          {currentUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 rounded-full outline-none" aria-label="User menu">
                   <Avatar className="size-8">
-                    <AvatarImage src={normalizeImageUrl(user.profile?.profilePhoto)} alt={user.name} />
+                    <AvatarImage src={normalizeImageUrl(currentUser.profile?.profilePhoto)} alt={currentUser.name} />
                     <AvatarFallback>{initials}</AvatarFallback>
                   </Avatar>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <div className="px-2 py-1.5 text-sm font-medium">{user.name}</div>
-                <div className="px-2 pb-1 text-xs text-muted-foreground">{user.email}</div>
+                <div className="px-2 py-1.5 text-sm font-medium">{currentUser.name}</div>
+                <div className="px-2 pb-1 text-xs text-muted-foreground">{currentUser.email}</div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link href={dashboardHref} className="cursor-pointer">
@@ -142,7 +148,7 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
         </div>
 
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setMobileNavOpen(!isOpen)}
           className="flex items-center md:hidden"
           aria-label="Toggle menu"
         >
@@ -166,18 +172,18 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
             <Link
               key={link.href}
               href={link.href}
-              onClick={() => setIsOpen(false)}
+              onClick={() => setMobileNavOpen(false)}
               className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               {link.label}
             </Link>
           ))}
           <hr className="my-2" />
-          {user ? (
+          {currentUser ? (
             <>
               <Link
                 href={dashboardHref}
-                onClick={() => setIsOpen(false)}
+                onClick={() => setMobileNavOpen(false)}
                 className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 Dashboard
@@ -195,14 +201,14 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
             <>
               <Link
                 href="/auth/login"
-                onClick={() => setIsOpen(false)}
+                onClick={() => setMobileNavOpen(false)}
                 className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 Log In
               </Link>
               <Link
                 href="/auth/register"
-                onClick={() => setIsOpen(false)}
+                onClick={() => setMobileNavOpen(false)}
                 className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 Sign Up

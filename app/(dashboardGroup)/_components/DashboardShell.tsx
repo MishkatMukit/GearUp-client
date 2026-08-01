@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import type { ComponentType } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -17,6 +16,8 @@ import {
   X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useUserStore } from "@/stores/useUserStore"
+import { useUiStore } from "@/stores/useUiStore"
 import type { User } from "@/service/auth"
 
 type NavItem = {
@@ -52,11 +53,14 @@ type DashboardShellProps = {
   children: React.ReactNode
 }
 
-export function DashboardShell({ user, children }: DashboardShellProps) {
+export function DashboardShell({ user: serverUser, children }: DashboardShellProps) {
   const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
+  const user = useUserStore((s) => s.user)
+  const currentUser = user ?? serverUser
+  const isOpen = useUiStore((s) => s.dashboardSidebarOpen)
+  const setDashboardSidebarOpen = useUiStore((s) => s.setDashboardSidebarOpen)
 
-  const navItems = NAV_ITEMS[user.role] ?? []
+  const navItems = NAV_ITEMS[currentUser.role] ?? []
   const activeItem = navItems.find(
     (item) => pathname === item.href || pathname.startsWith(item.href + "/"),
   )
@@ -73,7 +77,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
           <Link
             key={item.href}
             href={item.href}
-            onClick={() => setIsOpen(false)}
+            onClick={() => setDashboardSidebarOpen(false)}
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
               active
@@ -99,11 +103,11 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
             className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={() => setIsOpen(false)}
+            onClick={() => setDashboardSidebarOpen(false)}
           />
           <aside className="absolute inset-y-0 left-0 w-64 border-r bg-card">
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => setDashboardSidebarOpen(false)}
               aria-label="Close menu"
               className="absolute top-4 right-4 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
@@ -118,7 +122,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
         <header className="sticky top-16 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur sm:px-6">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setIsOpen(true)}
+              onClick={() => setDashboardSidebarOpen(true)}
               className="rounded-md p-1 lg:hidden"
               aria-label="Open menu"
             >
