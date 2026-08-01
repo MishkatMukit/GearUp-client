@@ -27,7 +27,12 @@ export type CreateRentalFormData = z.infer<typeof createRentalSchema>
 
 export const updateProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().max(20, "Phone number is too long").optional(),
+  phone: z
+    .string()
+    .trim()
+    .min(5, "Phone number must be at least 5 characters")
+    .or(z.literal(""))
+    .optional(),
   profilePhoto: z
     .string()
     .url("Enter a valid image URL")

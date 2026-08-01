@@ -28,6 +28,13 @@ export const updateProfileAction = async (
     return { success: false, message: "Please log in to update your profile" }
   }
 
+  const payload: Record<string, string> = {}
+  payload.name = parsed.data.name.trim()
+  if (parsed.data.phone?.trim()) payload.phone = parsed.data.phone.trim()
+  if (parsed.data.profilePhoto?.trim()) payload.profilePhoto = parsed.data.profilePhoto.trim()
+  payload.bio = parsed.data.bio?.trim() ?? ""
+  payload.address = parsed.data.address?.trim() ?? ""
+
   try {
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/users/update-profile`, {
       method: "PUT",
@@ -35,7 +42,7 @@ export const updateProfileAction = async (
         "Content-Type": "application/json",
         Cookie: `accessToken=${accessToken}`,
       },
-      body: JSON.stringify(parsed.data),
+      body: JSON.stringify(payload),
     })
 
     const result = await res.json()
