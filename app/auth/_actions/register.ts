@@ -48,6 +48,8 @@ export const registerAction = async (prevState: RegisterState, formData: FormDat
     revalidateTag("my-profile", "max")
     revalidateTag("my-rentals", "max")
     revalidateTag("my-payments", "max")
+    revalidateTag("my-gear", "max")
+    revalidateTag("provider-orders", "max")
 
     redirect("/dashboard")
   }
