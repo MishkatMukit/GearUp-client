@@ -103,14 +103,14 @@ export default async function GearPage({ searchParams }: GearPageProps) {
           <div className="mt-6 grid gap-6 lg:grid-cols-[240px_1fr] lg:gap-8">
             <div className="hidden lg:block">
               <Suspense fallback={<FiltersSkeleton />}>
-                <GearFilters query={query} />
+                <GearFilters />
               </Suspense>
             </div>
 
             <div className="lg:hidden">
               <MobileFiltersDrawer>
                 <Suspense fallback={<FiltersSkeleton />}>
-                  <GearFilters query={query} />
+                  <GearFilters />
                 </Suspense>
               </MobileFiltersDrawer>
             </div>

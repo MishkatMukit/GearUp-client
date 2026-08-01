@@ -24,6 +24,67 @@ export type ApiCategory = {
   _count?: { gearItems: number }
 }
 
+export type ApiUser = {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  role: Role
+  status: string
+  createdAt: string
+  updatedAt: string
+  profile?: {
+    id: string
+    profilePhoto?: string
+    bio?: string
+    address?: string
+    userId: string
+  }
+}
+
+export type ApiReview = {
+  id: string
+  rating: number
+  comment?: string
+  customerId: string
+  gearItemId: string
+  createdAt: string
+  updatedAt: string
+  customer?: ApiUser
+}
+
+export type ApiGearDetail = {
+  id: string
+  name: string
+  description: string
+  brand?: string
+  pricePerDay: number
+  stock: number
+  isAvailable: boolean
+  images: string[]
+  categoryId: string
+  category: { id: string; name: string }
+  providerId: string
+  provider: ApiUser
+  reviews?: ApiReview[]
+  _count?: { reviews: number }
+  createdAt: string
+  updatedAt: string
+}
+
+export type RentalState = {
+  success: boolean
+  message: string
+  data?: {
+    id: string
+    startDate: string
+    endDate: string
+    quantity: number
+    days: number
+    totalAmount: number
+  }
+}
+
 export type Role = "CUSTOMER" | "PROVIDER" | "ADMIN"
 
 export type LoginPayload = {

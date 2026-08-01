@@ -1,4 +1,4 @@
-import type { ApiCategory, ApiGearItem } from "@/lib/types"
+import type { ApiCategory, ApiGearDetail, ApiGearItem } from "@/lib/types"
 
 const BACKEND_URL = process.env.BACKEND_API_URL ?? ""
 
@@ -44,6 +44,21 @@ export const getGearList = async (query: GearQuery): Promise<GearListResult> => 
   }
 
   return { items, meta }
+}
+
+export const getGearById = async (id: string): Promise<ApiGearDetail | null> => {
+  if (!id) return null
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/gear/${id}`, {
+      next: { revalidate: 60, tags: [`gear-${id}`] },
+    })
+    if (!res.ok) return null
+    const body = await res.json()
+    return body.data ?? null
+  } catch {
+    return null
+  }
 }
 
 export const getCategories = async (): Promise<ApiCategory[]> => {
