@@ -39,6 +39,9 @@ export const loginAction = async (redirectTo: string, prevState: LoginState, for
     revalidateTag("my-payments", "max")
     revalidateTag("my-gear", "max")
     revalidateTag("provider-orders", "max")
+    revalidateTag("admin-users", "max")
+    revalidateTag("admin-gear", "max")
+    revalidateTag("admin-rentals", "max")
 
     if (redirectTo && typeof redirectTo === "string" && redirectTo.startsWith("/") && !redirectTo.startsWith("//")) {
       redirect(redirectTo)

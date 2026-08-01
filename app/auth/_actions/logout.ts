@@ -15,6 +15,9 @@ export const logoutAction = async () => {
   revalidateTag("my-payments", "max")
   revalidateTag("my-gear", "max")
   revalidateTag("provider-orders", "max")
+  revalidateTag("admin-users", "max")
+  revalidateTag("admin-gear", "max")
+  revalidateTag("admin-rentals", "max")
 
   redirect("/auth/login")
 }
