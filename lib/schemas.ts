@@ -25,6 +25,25 @@ export const createRentalSchema = z.object({
 
 export type CreateRentalFormData = z.infer<typeof createRentalSchema>
 
+export const createGearSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  description: z.string().min(5, "Description must be at least 5 characters"),
+  brand: z.string().trim().optional(),
+  pricePerDay: z.coerce.number().positive("Price per day must be greater than 0"),
+  stock: z.coerce.number().int().nonnegative("Stock must be a positive integer"),
+  isAvailable: z.boolean().optional(),
+  images: z.array(z.string().url("Enter a valid image URL")).optional(),
+  categoryId: z.string().min(1, "Category is required"),
+})
+
+export const updateGearSchema = createGearSchema.partial()
+
+export type CreateGearFormData = z.infer<typeof createGearSchema>
+
+export const updateRentalStatusSchema = z.object({
+  status: z.enum(["CONFIRMED", "PICKED_UP", "RETURNED"]),
+})
+
 export const updateProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z

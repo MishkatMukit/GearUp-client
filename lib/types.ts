@@ -26,6 +26,19 @@ export type ApiCategory = {
   _count?: { gearItems: number }
 }
 
+export type ApiProviderGear = {
+  id: string
+  name: string
+  description?: string
+  brand?: string
+  pricePerDay: number
+  stock?: number
+  isAvailable: boolean
+  images: string[]
+  category?: { id: string; name: string }
+  createdAt?: string
+}
+
 export type ApiUser = {
   id: string
   name: string
@@ -93,6 +106,11 @@ export type ProfileState = {
   user?: User
 }
 
+export type MutationState = {
+  success: boolean
+  message: string
+}
+
 export type Role = "CUSTOMER" | "PROVIDER" | "ADMIN"
 
 export type RentalStatus = "PLACED" | "CONFIRMED" | "PAID" | "PICKED_UP" | "RETURNED" | "CANCELLED"
@@ -116,6 +134,11 @@ export type ApiRentalOrder = {
   id: string
   customerId: string
   gearItemId: string
+  customer?: {
+    id: string
+    name: string
+    email?: string
+  }
   gearItem?: {
     id: string
     name: string
