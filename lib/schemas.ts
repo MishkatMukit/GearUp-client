@@ -44,6 +44,10 @@ export const updateRentalStatusSchema = z.object({
   status: z.enum(["CONFIRMED", "PICKED_UP", "RETURNED"]),
 })
 
+export const updateUserStatusSchema = z.object({
+  status: z.enum(["ACTIVE", "SUSPENDED"]),
+})
+
 export const updateProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z

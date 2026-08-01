@@ -36,6 +36,7 @@ export type ApiProviderGear = {
   isAvailable: boolean
   images: string[]
   category?: { id: string; name: string }
+  provider?: { id: string; name: string }
   createdAt?: string
 }
 
