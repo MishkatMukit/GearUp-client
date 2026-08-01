@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react"
+import { Menu, X, LogOut, LayoutDashboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -97,12 +97,6 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
                 <div className="px-2 pb-1 text-xs text-muted-foreground">{user.email}</div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" className="cursor-pointer">
-                    <User className="size-4" />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
                   <Link href="/dashboard" className="cursor-pointer">
                     <LayoutDashboard className="size-4" />
                     Dashboard
@@ -180,13 +174,6 @@ export function Navbar({ user, transparent = false }: NavbarProps) {
                 className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 Dashboard
-              </Link>
-              <Link
-                href="/profile"
-                onClick={() => setIsOpen(false)}
-                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                Profile
               </Link>
               <form action={logoutAction}>
                 <button
