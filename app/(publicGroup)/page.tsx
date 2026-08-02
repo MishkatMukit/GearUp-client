@@ -55,7 +55,7 @@ export default function HomePage() {
         <CategorySection />
       </Suspense> */}
       <Suspense fallback={<FeaturedGearSkeleton />}>
-        <FeaturedGear />
+      <FeaturedGear />
       </Suspense>
       <HowItWorks />
       {/* <CTASection /> */}
