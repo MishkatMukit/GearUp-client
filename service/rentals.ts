@@ -40,6 +40,35 @@ const fetchMyPayments = unstable_cache(
   }
 )
 
+const fetchRentalById = unstable_cache(
+  async (accessToken: string, id: string) => {
+    const res = await fetch(`${BACKEND_URL}/api/rentals/${id}`, {
+      headers: { Cookie: `accessToken=${accessToken}` },
+    })
+    if (!res.ok) return null
+
+    const body = await res.json()
+    return body.data ?? null
+  },
+  ["rental-detail-cache"],
+  {
+    tags: ["my-rentals"],
+    revalidate: 60,
+  },
+)
+
+export const getRentalOrderById = async (id: string): Promise<ApiRentalOrder | null> => {
+  try {
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get("accessToken")?.value
+    if (!accessToken) return null
+
+    return await fetchRentalById(accessToken, id)
+  } catch {
+    return null
+  }
+}
+
 export const getMyRentals = async (): Promise<ApiRentalOrder[]> => {
   try {
     const cookieStore = await cookies()
