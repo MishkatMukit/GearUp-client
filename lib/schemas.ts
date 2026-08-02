@@ -66,3 +66,11 @@ export const updateProfileSchema = z.object({
 })
 
 export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>
+
+export const createReviewSchema = z.object({
+  gearItemId: z.string().min(1, "Gear is required"),
+  rating: z.coerce.number().int().min(1, "Rating must be at least 1").max(5, "Rating must be at most 5"),
+  comment: z.string().max(500, "Comment must be under 500 characters").optional(),
+})
+
+export type CreateReviewFormData = z.infer<typeof createReviewSchema>

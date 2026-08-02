@@ -192,3 +192,17 @@ export type RegisterState = {
   statusCode: number
   message: string
 }
+
+export type PaymentInitState = {
+  success: boolean
+  message: string
+  data?: {
+    url?: string
+    stripeSessionId?: string
+  }
+}
+
+export type CreateReviewState = {
+  success: boolean
+  message: string
+}
