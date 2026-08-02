@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { PackageSearch } from "lucide-react"
 import {
   Table,
@@ -7,7 +8,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
 import { RentalStatusBadge } from "@/components/shared/StatusBadge"
+import { CancelOrderButton } from "@/app/payment/_components/CancelOrderButton"
+import { ReviewDialog } from "@/app/payment/_components/ReviewDialog"
 import type { ApiRentalOrder } from "@/lib/types"
 import { GearThumb } from "@/components/shared/GearThumb"
 import { formatDate, formatMoney } from "@/lib/format"
@@ -37,6 +41,7 @@ export function OrdersTable({ rentals, limit }: { rentals: ApiRentalOrder[]; lim
           <TableHead className="text-right">Qty</TableHead>
           <TableHead className="text-right">Total</TableHead>
           <TableHead>Status</TableHead>
+          <TableHead className="text-right">Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -65,11 +70,29 @@ export function OrdersTable({ rentals, limit }: { rentals: ApiRentalOrder[]; lim
             <TableCell>
               <RentalStatusBadge status={rental.status} />
             </TableCell>
+            <TableCell className="text-right">{OrderAction(rental)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
   )
+}
+
+function OrderAction(rental: ApiRentalOrder) {
+  switch (rental.status) {
+    case "PLACED":
+      return <CancelOrderButton order={rental} />
+    case "CONFIRMED":
+      return (
+        <Button asChild size="sm">
+          <Link href={`/payment?orderId=${rental.id}`}>Pay Now</Link>
+        </Button>
+      )
+    case "RETURNED":
+      return <ReviewDialog order={rental} />
+    default:
+      return <span className="text-xs text-muted-foreground">—</span>
+  }
 }
 
 export function OrdersTableSkeleton() {
