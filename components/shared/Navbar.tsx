@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, LogOut, LayoutDashboard } from "lucide-react"
+import { Menu, X, LayoutDashboard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -13,9 +13,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
-import { logoutAction } from "@/app/auth/_actions/logout"
 import { useUserStore } from "@/stores/useUserStore"
 import { useUiStore } from "@/stores/useUiStore"
+import { LogoutDialog } from "@/components/shared/LogoutDialog"
 import { cn, normalizeImageUrl } from "@/lib/utils"
 import type { User as UserType } from "@/service/auth"
 
@@ -117,12 +117,7 @@ export function Navbar({ user: serverUser, transparent = false }: NavbarProps) {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <form action={logoutAction}>
-                    <button type="submit" className="flex w-full items-center gap-2 text-destructive">
-                      <LogOut className="size-4" />
-                      Log Out
-                    </button>
-                  </form>
+                  <LogoutDialog />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -188,14 +183,7 @@ export function Navbar({ user: serverUser, transparent = false }: NavbarProps) {
               >
                 Dashboard
               </Link>
-              <form action={logoutAction}>
-                <button
-                  type="submit"
-                  className="block w-full rounded-md px-3 py-2 text-left text-sm font-medium text-destructive hover:bg-muted"
-                >
-                  Log Out
-                </button>
-              </form>
+              <LogoutDialog className="block w-full rounded-md px-3 py-2 text-left text-sm font-medium text-destructive hover:bg-muted" />
             </>
           ) : (
             <>

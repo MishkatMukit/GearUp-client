@@ -26,10 +26,7 @@ export function HeroSection() {
             Need Gear? Rent It Instead.
           </h1>
           <p className="mt-6 text-lg leading-8 text-white/80">
-            GearUp connects you with trusted local providers offering quality
-            equipment for outdoor activities, work, and everyday use. Browse,
-            compare, and rent the gear you need through a simple, secure, and
-            reliable marketplace.
+            GearUp connects you with trusted local providers offering quality photography and filmmaking equipment. Browse, compare, and rent cameras, lenses, lighting, audio gear, and production equipment through a simple, secure, and reliable marketplace.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link
