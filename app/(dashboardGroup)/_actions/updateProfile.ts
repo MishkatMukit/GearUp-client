@@ -1,7 +1,6 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { revalidateTag } from "next/cache"
 import { updateProfileSchema } from "@/lib/schemas"
 import type { ProfileState } from "@/lib/types"
 
@@ -48,7 +47,6 @@ export const updateProfileAction = async (
     const result = await res.json()
 
     if (res.ok && result.success) {
-      revalidateTag("my-profile", { expire: 0 })
       return { success: true, message: "Profile updated successfully", user: result.data }
     }
 

@@ -1,5 +1,4 @@
 import { cookies } from "next/headers"
-import { unstable_cache } from "next/cache"
 
 export type User = {
   id: string
@@ -17,9 +16,15 @@ export type User = {
   }
 }
 
-const fetchMe = unstable_cache(
-  async (accessToken: string) => {
+export const getMe = async (): Promise<User | null> => {
+  try {
+    const cookieStore = await cookies()
+    const accessToken = cookieStore.get("accessToken")?.value
+
+    if (!accessToken) return null
+
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/me`, {
+      cache: "no-store",
       headers: {
         Cookie: `accessToken=${accessToken}`,
       },
@@ -29,22 +34,6 @@ const fetchMe = unstable_cache(
 
     const body = await res.json()
     return body.data ?? null
-  },
-  ["my-profile-cache"],
-  {
-    tags: ["my-profile"],
-    revalidate: 60,
-  }
-)
-
-export const getMe = async (): Promise<User | null> => {
-  try {
-    const cookieStore = await cookies()
-    const accessToken = cookieStore.get("accessToken")?.value
-
-    if (!accessToken) return null
-
-    return await fetchMe(accessToken)
   } catch {
     return null
   }

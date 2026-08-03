@@ -1,7 +1,6 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { revalidateTag } from "next/cache"
 import type { PaymentInitState } from "@/lib/types"
 
 export const createPaymentAction = async (
@@ -40,8 +39,6 @@ export const createPaymentAction = async (
         return { success: false, message: "Payment gateway URL was not returned" }
       }
 
-      revalidateTag("my-rentals", { expire: 0 })
-      revalidateTag("my-payments", { expire: 0 })
       return {
         success: true,
         message: "Redirecting to payment gateway...",

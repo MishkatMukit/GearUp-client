@@ -41,7 +41,6 @@ export const submitReviewAction = async (
     if (res.ok && result.success) {
       revalidateTag("public-gear", { expire: 0 })
       revalidateTag(`gear-${parsed.data.gearItemId}`, { expire: 0 })
-      revalidateTag("my-rentals", { expire: 0 })
       return { success: true, message: "Review submitted" }
     }
 

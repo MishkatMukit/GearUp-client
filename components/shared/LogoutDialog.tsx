@@ -23,10 +23,13 @@ export function LogoutDialog({ className }: { className?: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className={className ?? "flex w-full items-center gap-2 text-destructive"}>
+        <Button
+          variant="ghost"
+          className={className ?? "h-full w-full justify-start text-destructive hover:text-destructive"}
+        >
           <LogOut className="size-4" />
           Log Out
-        </button>
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

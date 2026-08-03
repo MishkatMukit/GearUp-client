@@ -31,6 +31,7 @@ export const getGearList = async (query: GearQuery): Promise<GearListResult> => 
 
   try {
     const res = await fetch(`${BACKEND_URL}/api/gear?${params.toString()}`, {
+      cache: "force-cache",
       next: { revalidate: 60, tags: ["public-gear"] },
     })
     if (res.ok) {
@@ -51,6 +52,7 @@ export const getGearById = async (id: string): Promise<ApiGearDetail | null> => 
 
   try {
     const res = await fetch(`${BACKEND_URL}/api/gear/${id}`, {
+      cache: "force-cache",
       next: { revalidate: 60, tags: [`gear-${id}`] },
     })
     if (!res.ok) return null
@@ -66,6 +68,7 @@ export const getCategories = async (): Promise<ApiCategory[]> => {
 
   try {
     const res = await fetch(`${BACKEND_URL}/api/categories`, {
+      cache: "force-cache",
       next: { revalidate: 300, tags: ["categories"] },
     })
     if (res.ok) {

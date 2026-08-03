@@ -1,61 +1,7 @@
 import { cookies } from "next/headers"
-import { unstable_cache } from "next/cache"
 import type { ApiPayment, ApiRentalOrder } from "@/lib/types"
 
 const BACKEND_URL = process.env.BACKEND_API_URL ?? ""
-
-const fetchMyRentals = unstable_cache(
-  async (accessToken: string) => {
-    const res = await fetch(`${BACKEND_URL}/api/rentals`, {
-      headers: { Cookie: `accessToken=${accessToken}` },
-    })
-    if (!res.ok) return []
-
-    const body = await res.json()
-    const raw = body.data ?? body
-    return Array.isArray(raw) ? raw : []
-  },
-  ["my-rentals-cache"],
-  {
-    tags: ["my-rentals"],
-    revalidate: 60,
-  }
-)
-
-const fetchMyPayments = unstable_cache(
-  async (accessToken: string) => {
-    const res = await fetch(`${BACKEND_URL}/api/payments`, {
-      headers: { Cookie: `accessToken=${accessToken}` },
-    })
-    if (!res.ok) return []
-
-    const body = await res.json()
-    const raw = body.data ?? body
-    return Array.isArray(raw) ? raw : []
-  },
-  ["my-payments-cache"],
-  {
-    tags: ["my-payments"],
-    revalidate: 60,
-  }
-)
-
-const fetchRentalById = unstable_cache(
-  async (accessToken: string, id: string) => {
-    const res = await fetch(`${BACKEND_URL}/api/rentals/${id}`, {
-      headers: { Cookie: `accessToken=${accessToken}` },
-    })
-    if (!res.ok) return null
-
-    const body = await res.json()
-    return body.data ?? null
-  },
-  ["rental-detail-cache"],
-  {
-    tags: ["my-rentals"],
-    revalidate: 60,
-  },
-)
 
 export const getRentalOrderById = async (id: string): Promise<ApiRentalOrder | null> => {
   try {
@@ -63,7 +9,14 @@ export const getRentalOrderById = async (id: string): Promise<ApiRentalOrder | n
     const accessToken = cookieStore.get("accessToken")?.value
     if (!accessToken) return null
 
-    return await fetchRentalById(accessToken, id)
+    const res = await fetch(`${BACKEND_URL}/api/rentals/${id}`, {
+      cache: "no-store",
+      headers: { Cookie: `accessToken=${accessToken}` },
+    })
+    if (!res.ok) return null
+
+    const body = await res.json()
+    return body.data ?? null
   } catch {
     return null
   }
@@ -75,7 +28,15 @@ export const getMyRentals = async (): Promise<ApiRentalOrder[]> => {
     const accessToken = cookieStore.get("accessToken")?.value
     if (!accessToken) return []
 
-    return await fetchMyRentals(accessToken)
+    const res = await fetch(`${BACKEND_URL}/api/rentals`, {
+      cache: "no-store",
+      headers: { Cookie: `accessToken=${accessToken}` },
+    })
+    if (!res.ok) return []
+
+    const body = await res.json()
+    const raw = body.data ?? body
+    return Array.isArray(raw) ? raw : []
   } catch {
     return []
   }
@@ -87,7 +48,15 @@ export const getMyPayments = async (): Promise<ApiPayment[]> => {
     const accessToken = cookieStore.get("accessToken")?.value
     if (!accessToken) return []
 
-    return await fetchMyPayments(accessToken)
+    const res = await fetch(`${BACKEND_URL}/api/payments`, {
+      cache: "no-store",
+      headers: { Cookie: `accessToken=${accessToken}` },
+    })
+    if (!res.ok) return []
+
+    const body = await res.json()
+    const raw = body.data ?? body
+    return Array.isArray(raw) ? raw : []
   } catch {
     return []
   }

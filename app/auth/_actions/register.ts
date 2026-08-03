@@ -44,16 +44,6 @@ export const registerAction = async (prevState: RegisterState, formData: FormDat
       sameSite: "lax",
     })
 
-    const { revalidateTag } = await import("next/cache")
-    revalidateTag("my-profile", "max")
-    revalidateTag("my-rentals", "max")
-    revalidateTag("my-payments", "max")
-    revalidateTag("my-gear", "max")
-    revalidateTag("provider-orders", "max")
-    revalidateTag("admin-users", "max")
-    revalidateTag("admin-gear", "max")
-    revalidateTag("admin-rentals", "max")
-
     redirect("/dashboard")
   }
 

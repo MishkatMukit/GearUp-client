@@ -9,15 +9,5 @@ export const logoutAction = async () => {
   cookieStore.set("accessToken", "", { maxAge: 0 })
   cookieStore.set("refreshToken", "", { maxAge: 0 })
 
-  const { revalidateTag } = await import("next/cache")
-  revalidateTag("my-profile", "max")
-  revalidateTag("my-rentals", "max")
-  revalidateTag("my-payments", "max")
-  revalidateTag("my-gear", "max")
-  revalidateTag("provider-orders", "max")
-  revalidateTag("admin-users", "max")
-  revalidateTag("admin-gear", "max")
-  revalidateTag("admin-rentals", "max")
-
   redirect("/auth/login")
 }

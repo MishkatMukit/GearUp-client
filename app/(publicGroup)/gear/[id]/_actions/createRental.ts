@@ -43,9 +43,6 @@ export const createRentalAction = async (
     const result = await res.json()
 
     if (res.ok && result.success) {
-      const { revalidateTag } = await import("next/cache")
-      revalidateTag("my-rentals", { expire: 0 })
-      revalidateTag("my-payments", { expire: 0 })
       return { success: true, message: "Rental order placed successfully", data: result.data }
     }
 

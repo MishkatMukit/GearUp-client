@@ -1,7 +1,6 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { revalidateTag } from "next/cache"
 import type { MutationState } from "@/lib/types"
 
 export const cancelOrderAction = async (
@@ -33,8 +32,6 @@ export const cancelOrderAction = async (
     const result = await res.json()
 
     if (res.ok && result.success) {
-      revalidateTag("my-rentals", { expire: 0 })
-      revalidateTag("my-payments", { expire: 0 })
       return { success: true, message: "Order cancelled" }
     }
 

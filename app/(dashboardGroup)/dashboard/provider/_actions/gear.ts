@@ -45,7 +45,6 @@ export const createGearAction = async (
     const result = await res.json()
 
     if (res.ok && result.success) {
-      revalidateTag("my-gear", { expire: 0 })
       revalidateTag("public-gear", { expire: 0 })
       return { success: true, message: "Gear added successfully" }
     }
@@ -100,7 +99,6 @@ export const updateGearAction = async (
     const result = await res.json()
 
     if (res.ok && result.success) {
-      revalidateTag("my-gear", { expire: 0 })
       revalidateTag("public-gear", { expire: 0 })
       revalidateTag(`gear-${gearId}`, { expire: 0 })
       return { success: true, message: "Gear updated successfully" }
@@ -137,7 +135,6 @@ export const deleteGearAction = async (
     const result = await res.json()
 
     if (res.ok && result.success) {
-      revalidateTag("my-gear", { expire: 0 })
       revalidateTag("public-gear", { expire: 0 })
       return { success: true, message: "Gear deleted" }
     }

@@ -1,7 +1,6 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { revalidateTag } from "next/cache"
 import { updateRentalStatusSchema } from "@/lib/schemas"
 import type { MutationState } from "@/lib/types"
 
@@ -41,8 +40,6 @@ export const updateOrderStatusAction = async (
     const result = await res.json()
 
     if (res.ok && result.success) {
-      revalidateTag("provider-orders", { expire: 0 })
-      revalidateTag("my-rentals", { expire: 0 })
       return { success: true, message: `Order marked as ${parsed.data.status}` }
     }
 
