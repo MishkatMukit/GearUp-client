@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 import { getRentalOrderById } from "@/service/rentals"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -102,6 +103,12 @@ export default function PaymentPage({
   return (
     <section className="py-12">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        <Button variant="ghost" size="sm" asChild className="mb-4 -ml-2">
+          <Link href="/dashboard/customer/orders">
+            <ArrowLeft className="size-4 mr-1" />
+            Back to Orders
+          </Link>
+        </Button>
         <h1 className="text-2xl font-bold tracking-tight">Checkout</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Complete your payment to confirm the rental.
