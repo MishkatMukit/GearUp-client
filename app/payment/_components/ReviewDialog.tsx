@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Pen } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,12 +19,17 @@ type ReviewDialogProps = {
 }
 
 export function ReviewDialog({ order }: ReviewDialogProps) {
+  const [open, setOpen] = useState(false)
   const gearName = order.gearItem?.name ?? "this gear"
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-green-600 text-green-700 hover:bg-green-50 hover:text-green-700"
+        >
           <Pen className="size-4" />
           Leave Review
         </Button>
@@ -33,7 +39,7 @@ export function ReviewDialog({ order }: ReviewDialogProps) {
           <DialogTitle>Review {gearName}</DialogTitle>
           <DialogDescription>Share your experience with this gear.</DialogDescription>
         </DialogHeader>
-        <ReviewForm order={order} />
+        <ReviewForm order={order} onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   )

@@ -2,12 +2,15 @@
 
 import { useActionState, useEffect, useMemo } from "react"
 import Link from "next/link"
-import { CalendarCheck, CheckCircle2, LogIn } from "lucide-react"
+import { CalendarCheck, CheckCircle2, CalendarIcon, LogIn } from "lucide-react"
+import { format, parseISO, isBefore, startOfDay } from "date-fns"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { createRentalAction } from "@/app/(publicGroup)/gear/[id]/_actions/createRental"
 import { useRentFormStore } from "@/stores/useRentFormStore"
 import { useUserStore } from "@/stores/useUserStore"
@@ -45,7 +48,7 @@ export function RentNowCard({ gear, user: serverUser }: RentNowCardProps) {
     }
   }, [state])
 
-  const today = useMemo(() => new Date().toISOString().split("T")[0], [])
+  const today = useMemo(() => startOfDay(new Date()), [])
 
   const days = useMemo(() => {
     if (!startDate || !endDate) return 0
@@ -182,27 +185,59 @@ export function RentNowCard({ gear, user: serverUser }: RentNowCardProps) {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="startDate">Start date</Label>
-                <Input
-                  id="startDate"
-                  name="startDate"
-                  type="date"
-                  min={today}
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  required
-                />
+                <input type="hidden" name="startDate" value={startDate} />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="startDate"
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !startDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 size-4" />
+                      {startDate ? format(parseISO(startDate), "MMM d, yyyy") : "Pick date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={startDate ? parseISO(startDate) : undefined}
+                      onSelect={(date) => setStartDate(date ? format(date, "yyyy-MM-dd") : "")}
+                      disabled={(date) => isBefore(date, today)}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="endDate">End date</Label>
-                <Input
-                  id="endDate"
-                  name="endDate"
-                  type="date"
-                  min={startDate || today}
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  required
-                />
+                <input type="hidden" name="endDate" value={endDate} />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="endDate"
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !endDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 size-4" />
+                      {endDate ? format(parseISO(endDate), "MMM d, yyyy") : "Pick date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate ? parseISO(endDate) : undefined}
+                      onSelect={(date) => setEndDate(date ? format(date, "yyyy-MM-dd") : "")}
+                      disabled={(date) =>
+                        isBefore(date, startDate ? parseISO(startDate) : today)
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 

@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { StatsCards } from "@/app/(dashboardGroup)/dashboard/customer/_components/StatsCards"
 import { OrdersTable } from "@/app/(dashboardGroup)/dashboard/customer/_components/OrdersTable"
 import { PaymentsTable } from "@/app/(dashboardGroup)/dashboard/customer/_components/PaymentsTable"
+import { StatsCardsSkeleton } from "@/app/(dashboardGroup)/dashboard/customer/_components/StatsCards"
+import { OrdersTableSkeleton } from "@/app/(dashboardGroup)/dashboard/customer/_components/OrdersTable"
+import { PaymentsTableSkeleton } from "@/app/(dashboardGroup)/dashboard/customer/_components/PaymentsTable"
 
 export async function CustomerOverview() {
   const [rentals, payments] = await Promise.all([getMyRentals(), getMyPayments()])
@@ -41,6 +44,30 @@ export async function CustomerOverview() {
         </CardHeader>
         <CardContent className="pt-0">
           <PaymentsTable payments={payments} limit={5} />
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+export function CustomerOverviewSkeleton() {
+  return (
+    <div className="space-y-6">
+      <StatsCardsSkeleton />
+      <Card>
+        <CardHeader className="flex-row items-center justify-between space-y-0">
+          <CardTitle>Recent Orders</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <OrdersTableSkeleton />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex-row items-center justify-between space-y-0">
+          <CardTitle>Recent Payments</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <PaymentsTableSkeleton />
         </CardContent>
       </Card>
     </div>

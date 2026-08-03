@@ -45,7 +45,7 @@ export function CancelOrderButton({ order }: CancelOrderButtonProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="destructive" size="sm">
           Cancel Order
         </Button>
       </DialogTrigger>

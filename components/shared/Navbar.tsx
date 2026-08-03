@@ -117,7 +117,7 @@ export function Navbar({ user: serverUser, transparent = false }: NavbarProps) {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <LogoutDialog />
+                  <LogoutDialog className="w-full justify-start text-destructive hover:text-destructive" />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -14,9 +14,10 @@ import type { ApiRentalOrder } from "@/lib/types"
 
 type ReviewFormProps = {
   order: ApiRentalOrder
+  onSuccess?: () => void
 }
 
-export function ReviewForm({ order }: ReviewFormProps) {
+export function ReviewForm({ order, onSuccess }: ReviewFormProps) {
   const router = useRouter()
   const rating = useReviewFormStore((s) => s.rating)
   const setRating = useReviewFormStore((s) => s.setRating)
@@ -34,10 +35,11 @@ export function ReviewForm({ order }: ReviewFormProps) {
       toast.success(state.message)
       reset()
       router.refresh()
+      onSuccess?.()
     } else {
       toast.error(state.message)
     }
-  }, [state, router, reset])
+  }, [state, router, reset, onSuccess])
 
   return (
     <form action={formAction}>
