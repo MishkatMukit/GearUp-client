@@ -1,5 +1,6 @@
 "use server"
 
+import { revalidateTag } from "next/cache"
 import { cookies } from "next/headers"
 import { updateUserStatusSchema } from "@/lib/schemas"
 import type { MutationState } from "@/lib/types"
@@ -40,6 +41,7 @@ export const updateUserStatusAction = async (
     const result = await res.json()
 
     if (res.ok && result.success) {
+      revalidateTag("admin-users", { expire: 0 })
       return { success: true, message: `User ${parsed.data.status.toLowerCase()}` }
     }
 

@@ -1,10 +1,25 @@
 import { Suspense } from "react"
-import { getAdminUsers } from "@/service/admin"
+import { getAdminUsersList } from "@/service/admin"
 import { Card, CardContent } from "@/components/ui/card"
 import { UsersTable, UsersTableSkeleton } from "@/app/(dashboardGroup)/admin-dashboard/_components/UsersTable"
+import { UserSearchBar } from "@/app/(dashboardGroup)/admin-dashboard/_components/UserSearchBar"
 
-async function UsersList() {
-  const users = await getAdminUsers()
+export const dynamic = "force-dynamic"
+
+type UsersPageProps = {
+  searchParams: Promise<{
+    searchTerm?: string
+    page?: string
+  }>
+}
+
+async function UsersTableAsync({ searchTerm, page }: { searchTerm?: string; page?: string }) {
+  const result = await getAdminUsersList({ searchTerm, page, limit: "10" })
+  return <UsersTable {...result} searchTerm={searchTerm} />
+}
+
+export default async function AdminUsersPage({ searchParams }: UsersPageProps) {
+  const params = await searchParams
 
   return (
     <div className="space-y-6">
@@ -14,19 +29,14 @@ async function UsersList() {
           Manage platform accounts and access.
         </p>
       </div>
+      <UserSearchBar />
       <Card>
         <CardContent className="pt-6">
-          <UsersTable users={users} />
+          <Suspense fallback={<UsersTableSkeleton />} key={params.searchTerm ?? ""}>
+            <UsersTableAsync searchTerm={params.searchTerm} page={params.page} />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
-  )
-}
-
-export default function AdminUsersPage() {
-  return (
-    <Suspense fallback={<UsersTableSkeleton />}>
-      <UsersList />
-    </Suspense>
   )
 }
