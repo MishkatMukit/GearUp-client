@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GearUp Client
+
+Frontend for **GearUp**, agear rental platform. Built with Next.js 16, React 19, and Tailwind CSS 4.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **UI:** React 19, shadcn/ui, Tailwind CSS 4, Lucide icons
+- **State:** Zustand
+- **Forms:** Native `<form>` + `useActionState`, Zod validation
+- **Auth:** Cookie-based JWT (httpOnly) with automatic token refresh
+- **Payments:** Stripe Checkout (via backend)
+- **Images:** Cloudinary
+- **Package manager:** pnpm
+
+## Prerequisites
+
+- Node.js 18+
+- pnpm
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repo-url>
+cd gear-up-client
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a `.env` file in the project root:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+BACKEND_API_URL=https://gear-up-backend-rho.vercel.app
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=<your-cloud-name>
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=gearupUsers
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_GEARS=gearupItems
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start the dev server:
 
-## Learn More
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/
+  (publicGroup)/          # Public routes (home, gear browsing, gear detail)
+  (dashboardGroup)/       # Protected dashboard routes
+    dashboard/
+      customer/           # Customer: orders, payments
+      provider/           # Provider: gear CRUD, orders
+      profile/            # Profile management
+    admin-dashboard/      # Admin: users, gear, rentals, profile
+  auth/                   # Login, register
+  payment/                # Stripe success/cancel pages
+components/
+  ui/                     # shadcn/ui primitives (button, card, dialog, table, etc.)
+  shared/                 # Navbar, Footer, StatusBadge, GearThumb, LogoutDialog
+  providers/              # ThemeProvider, UserProvider
+lib/
+  types.ts                # Shared TypeScript types
+  schemas.ts              # Zod schemas
+  utils.ts                # cn() utility
+  cloudinary.ts           # Cloudinary upload helpers
+  format.ts               # Date/number formatting
+service/                  # Server-side fetch layer (auth, gear, rentals, admin, provider)
+stores/                   # Zustand stores (user, UI, forms)
+proxy.ts                  # Next.js middleware (auth, role-based routing)
+```
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Roles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Role | Dashboard | Capabilities |
+|------|-----------|-------------|
+| **Customer** | `/dashboard` | Browse gear, rent, view orders/payments, leave reviews |
+| **Provider** | `/dashboard` | Manage gear listings, view/fulfill orders |
+| **Admin** | `/admin-dashboard` | Manage users, all gear, all rentals |
+
+### Core Flows
+
+- **Auth:** Register as Customer or Provider, login with JWT, automatic refresh token rotation via proxy middleware
+- **Gear Browsing:** Public catalog with category filtering, search, and detail pages with image gallery
+- **Rental:** Date picker, quantity selection, Stripe Checkout redirect, order status tracking
+- **Provider:** Create/edit/delete gear with Cloudinary image upload, stock management, order fulfillment
+- **Admin:** User status management ( ACTIVE / BANNED ), gear oversight, rental monitoring
+
+### Rental Order Status
+
+`PLACED` → `CONFIRMED` → `PAID` → `PICKED_UP` → `RETURNED` (or `CANCELLED`)
+
+## Available Scripts
+
+```bash
+pnpm dev      # Start dev server
+pnpm build    # Production build
+pnpm start    # Start production server
+pnpm lint     # Run ESLint
+```
+
+## Architecture Notes
+
+- **Proxy middleware** (`proxy.ts`) handles auth: decodes JWTs, refreshes expired access tokens, redirects based on role, protects routes
+- **Server actions** handle all mutations (login, register, profile updates, gear CRUD, rentals, payments)
+- **Zustand stores** manage client-side state (user identity, UI toggles, form state). No `useState` in components
+- **Service layer** (`service/`) wraps all backend fetches with `unstable_cache` for server-side caching with tag-based invalidation
+- **No axios** — all HTTP via native `fetch()`
