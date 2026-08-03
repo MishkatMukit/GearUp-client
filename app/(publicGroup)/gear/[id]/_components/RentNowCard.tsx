@@ -5,6 +5,7 @@ import Link from "next/link"
 import { CalendarCheck, CheckCircle2, CalendarIcon, LogIn } from "lucide-react"
 import { format, parseISO, isBefore, startOfDay } from "date-fns"
 import { toast } from "sonner"
+import { formatDate } from "@/lib/format"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -126,11 +127,11 @@ export function RentNowCard({ gear, user: serverUser }: RentNowCardProps) {
           <dl className="w-full space-y-2 rounded-lg border bg-muted/50 p-4 text-sm">
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Start</dt>
-              <dd className="font-medium">{state.data.startDate}</dd>
+              <dd className="font-medium">{formatDate(state.data.startDate)}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">End</dt>
-              <dd className="font-medium">{state.data.endDate}</dd>
+              <dd className="font-medium">{formatDate(state.data.endDate)}</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Quantity</dt>
