@@ -32,6 +32,11 @@ export function RentNowCard({ gear, user: serverUser }: RentNowCardProps) {
   const setStartDate = useRentFormStore((s) => s.setStartDate)
   const setEndDate = useRentFormStore((s) => s.setEndDate)
   const setQuantity = useRentFormStore((s) => s.setQuantity)
+  const reset = useRentFormStore((s) => s.reset)
+
+  useEffect(() => {
+    reset()
+  }, [gear.id, reset])
 
   const [state, formAction, pending] = useActionState(createRentalAction, {
     success: false,

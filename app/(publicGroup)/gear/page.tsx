@@ -86,7 +86,7 @@ export default async function GearPage({ searchParams }: GearPageProps) {
     minPrice: params.minPrice,
     maxPrice: params.maxPrice,
     page: params.page,
-    limit: params.limit ?? "8",
+    limit: params.limit ?? "9",
     sortBy: params.sortBy ?? "createdAt",
     sortOrder: params.sortOrder ?? "desc",
   }
@@ -116,7 +116,7 @@ export default async function GearPage({ searchParams }: GearPageProps) {
             </div>
 
             <Suspense fallback={<GridSkeleton />}>
-              <GearGrid query={query} />
+              <GearGrid key={JSON.stringify(query)} query={query} />
             </Suspense>
           </div>
         </GearSearchArea>

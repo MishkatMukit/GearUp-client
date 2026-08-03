@@ -29,7 +29,7 @@ export function FilterSidebar({ categories }: FilterSidebarProps) {
     })
 
     if (params.get("page") === "1") params.delete("page")
-    if (params.get("limit") === "8") params.delete("limit")
+    if (params.get("limit") === "9") params.delete("limit")
     if (params.get("sortBy") === "createdAt") params.delete("sortBy")
     if (params.get("sortOrder") === "desc") params.delete("sortOrder")
 

@@ -8,10 +8,24 @@ import { Button } from "@/components/ui/button"
 import { updateOrderStatusAction } from "@/app/(dashboardGroup)/dashboard/provider/_actions/orders"
 import type { ApiRentalOrder, RentalStatus } from "@/lib/types"
 
-const NEXT_ACTION: Partial<Record<RentalStatus, { label: string; status: RentalStatus }>> = {
-  PLACED: { label: "Confirm", status: "CONFIRMED" },
-  PAID: { label: "Mark Picked Up", status: "PICKED_UP" },
-  PICKED_UP: { label: "Mark Returned", status: "RETURNED" },
+const NEXT_ACTION: Partial<
+  Record<RentalStatus, { label: string; status: RentalStatus; className: string }>
+> = {
+  PLACED: {
+    label: "Confirm",
+    status: "CONFIRMED",
+    className: "bg-green-600 hover:bg-green-700 text-white",
+  },
+  PAID: {
+    label: "Mark Picked Up",
+    status: "PICKED_UP",
+    className: "bg-blue-600 hover:bg-blue-700 text-white",
+  },
+  PICKED_UP: {
+    label: "Mark Returned",
+    status: "RETURNED",
+    className: "bg-violet-600 hover:bg-violet-700 text-white",
+  },
 }
 
 export function OrderActions({ order }: { order: ApiRentalOrder }) {
@@ -42,7 +56,7 @@ export function OrderActions({ order }: { order: ApiRentalOrder }) {
     <form action={formAction}>
       <input type="hidden" name="orderId" value={order.id} />
       <input type="hidden" name="status" value={action.status} />
-      <Button type="submit" size="sm" disabled={pending}>
+      <Button type="submit" size="sm" disabled={pending} className={action.className}>
         {pending ? "Updating..." : action.label}
       </Button>
     </form>

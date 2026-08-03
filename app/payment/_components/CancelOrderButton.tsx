@@ -43,7 +43,7 @@ export function CancelOrderButton({ order }: CancelOrderButtonProps) {
   }, [state, router])
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(v) => !pending && setOpen(v)}>
       <DialogTrigger asChild>
         <Button variant="destructive" size="sm">
           Cancel Order
