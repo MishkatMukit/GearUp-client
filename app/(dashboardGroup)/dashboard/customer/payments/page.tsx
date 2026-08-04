@@ -9,21 +9,25 @@ import {
 async function PaymentsList() {
   const payments = await getMyPayments()
 
-  return (
-    <Card>
-      <CardContent className="pt-6">
-        <PaymentsTable payments={payments} />
-      </CardContent>
-    </Card>
-  )
+  return <PaymentsTable payments={payments} />
 }
 
 export default function CustomerPaymentsPage() {
   return (
     <div className="space-y-6">
-      <Suspense fallback={<PaymentsTableSkeleton />}>
-        <PaymentsList />
-      </Suspense>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Payments</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Review your payment history and receipts.
+        </p>
+      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <Suspense fallback={<PaymentsTableSkeleton />}>
+            <PaymentsList />
+          </Suspense>
+        </CardContent>
+      </Card>
     </div>
   )
 }

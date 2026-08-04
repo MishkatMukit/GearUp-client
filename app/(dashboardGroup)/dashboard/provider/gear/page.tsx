@@ -9,6 +9,10 @@ import { GearTable, GearTableSkeleton } from "@/app/(dashboardGroup)/dashboard/p
 async function GearList() {
   const gear = await getProviderGear()
 
+  return <GearTable gear={gear} />
+}
+
+export default function ProviderGearPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -28,17 +32,11 @@ async function GearList() {
 
       <Card>
         <CardContent className="pt-6">
-          <GearTable gear={gear} />
+          <Suspense fallback={<GearTableSkeleton />}>
+            <GearList />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
-  )
-}
-
-export default function ProviderGearPage() {
-  return (
-    <Suspense fallback={<GearTableSkeleton />}>
-      <GearList />
-    </Suspense>
   )
 }

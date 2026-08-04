@@ -9,6 +9,10 @@ import {
 async function GearList() {
   const gear = await getAdminGear()
 
+  return <AdminGearTable gear={gear} />
+}
+
+export default function AdminGearPage() {
   return (
     <div className="space-y-6">
       <div>
@@ -19,17 +23,11 @@ async function GearList() {
       </div>
       <Card>
         <CardContent className="pt-6">
-          <AdminGearTable gear={gear} />
+          <Suspense fallback={<AdminGearTableSkeleton />}>
+            <GearList />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
-  )
-}
-
-export default function AdminGearPage() {
-  return (
-    <Suspense fallback={<AdminGearTableSkeleton />}>
-      <GearList />
-    </Suspense>
   )
 }

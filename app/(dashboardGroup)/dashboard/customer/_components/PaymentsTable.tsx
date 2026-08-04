@@ -67,16 +67,40 @@ export function PaymentsTable({ payments, limit }: { payments: ApiPayment[]; lim
 
 export function PaymentsTableSkeleton() {
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="space-y-0 p-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-4 border-b py-3 last:border-0">
-            <div className="h-4 w-28 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-32 animate-pulse rounded bg-muted" />
-            <div className="ml-auto h-5 w-20 animate-pulse rounded-full bg-muted" />
-          </div>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Transaction</TableHead>
+          <TableHead>Order</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Date</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <TableRow key={i}>
+            <TableCell>
+              <div className="h-3 w-28 animate-pulse rounded bg-muted" />
+            </TableCell>
+            <TableCell>
+              <div className="space-y-2">
+                <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+                <div className="h-3 w-20 animate-pulse rounded bg-muted" />
+              </div>
+            </TableCell>
+            <TableCell className="text-right">
+              <div className="ml-auto h-4 w-14 animate-pulse rounded bg-muted" />
+            </TableCell>
+            <TableCell>
+              <div className="h-5 w-20 animate-pulse rounded-full bg-muted" />
+            </TableCell>
+            <TableCell>
+              <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+            </TableCell>
+          </TableRow>
         ))}
-      </div>
-    </div>
+      </TableBody>
+    </Table>
   )
 }

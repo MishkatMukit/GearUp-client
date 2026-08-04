@@ -6,21 +6,25 @@ import { OrdersTable, OrdersTableSkeleton } from "@/app/(dashboardGroup)/dashboa
 async function OrdersList() {
   const rentals = await getMyRentals()
 
-  return (
-    <Card>
-      <CardContent className="pt-6">
-        <OrdersTable rentals={rentals} />
-      </CardContent>
-    </Card>
-  )
+  return <OrdersTable rentals={rentals} />
 }
 
 export default function CustomerOrdersPage() {
   return (
     <div className="space-y-6">
-      <Suspense fallback={<OrdersTableSkeleton />}>
-        <OrdersList />
-      </Suspense>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">My Orders</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Track your rental orders and confirm payments.
+        </p>
+      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <Suspense fallback={<OrdersTableSkeleton />}>
+            <OrdersList />
+          </Suspense>
+        </CardContent>
+      </Card>
     </div>
   )
 }

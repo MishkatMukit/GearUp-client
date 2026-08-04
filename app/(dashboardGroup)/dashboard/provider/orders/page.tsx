@@ -9,6 +9,10 @@ import {
 async function OrdersList() {
   const orders = await getProviderOrders()
 
+  return <ProviderOrdersTable orders={orders} />
+}
+
+export default function ProviderOrdersPage() {
   return (
     <div className="space-y-6">
       <div>
@@ -19,17 +23,11 @@ async function OrdersList() {
       </div>
       <Card>
         <CardContent className="pt-6">
-          <ProviderOrdersTable orders={orders} />
+          <Suspense fallback={<ProviderOrdersTableSkeleton />}>
+            <OrdersList />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
-  )
-}
-
-export default function ProviderOrdersPage() {
-  return (
-    <Suspense fallback={<ProviderOrdersTableSkeleton />}>
-      <OrdersList />
-    </Suspense>
   )
 }

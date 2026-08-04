@@ -9,6 +9,10 @@ import {
 async function RentalsList() {
   const rentals = await getAdminRentals()
 
+  return <AdminRentalsTable rentals={rentals} />
+}
+
+export default function AdminRentalsPage() {
   return (
     <div className="space-y-6">
       <div>
@@ -19,17 +23,11 @@ async function RentalsList() {
       </div>
       <Card>
         <CardContent className="pt-6">
-          <AdminRentalsTable rentals={rentals} />
+          <Suspense fallback={<AdminRentalsTableSkeleton />}>
+            <RentalsList />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
-  )
-}
-
-export default function AdminRentalsPage() {
-  return (
-    <Suspense fallback={<AdminRentalsTableSkeleton />}>
-      <RentalsList />
-    </Suspense>
   )
 }
