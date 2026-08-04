@@ -157,52 +157,67 @@ export function Navbar({ user: serverUser, transparent = false }: NavbarProps) {
 
       <div
         className={cn(
-          "overflow-hidden border-t md:hidden transition-all duration-200",
+          "grid border-t transition-[grid-template-rows] duration-200 md:hidden",
           solid ? "border-border" : "border-white/10",
-          isOpen ? "max-h-64" : "max-h-0",
+          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
         )}
       >
-        <div className="space-y-1 px-4 py-4">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMobileNavOpen(false)}
-              className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <hr className="my-2" />
-          {currentUser ? (
-            <>
+        <div className="overflow-hidden">
+          <div className="space-y-1 px-4 pt-3 pb-[env(safe-area-inset-bottom)]">
+            {navLinks.map((link) => (
               <Link
-                href={dashboardHref}
+                key={link.href}
+                href={link.href}
                 onClick={() => setMobileNavOpen(false)}
-                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                className={cn(
+                  "flex min-h-11 items-center rounded-md px-3 text-sm font-medium hover:bg-muted hover:text-foreground",
+                  pathname === link.href
+                    ? "text-foreground font-semibold"
+                    : "text-muted-foreground",
+                )}
               >
-                Dashboard
+                {link.label}
               </Link>
-              <LogoutDialog className="block w-full rounded-md px-3 py-2 text-left text-sm font-medium text-destructive hover:bg-muted" />
-            </>
-          ) : (
-            <>
-              <Link
-                href="/auth/login"
-                onClick={() => setMobileNavOpen(false)}
-                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                Log In
-              </Link>
-              <Link
-                href="/auth/register"
-                onClick={() => setMobileNavOpen(false)}
-                className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                Sign Up
-              </Link>
-            </>
-          )}
+            ))}
+            <hr className="my-2" />
+            {currentUser ? (
+              <>
+                <Link
+                  href={dashboardHref}
+                  onClick={() => setMobileNavOpen(false)}
+                  className={cn(
+                    "flex min-h-11 items-center rounded-md px-3 text-sm font-medium hover:bg-muted hover:text-foreground",
+                    pathname === dashboardHref
+                      ? "text-foreground font-semibold"
+                      : "text-muted-foreground",
+                  )}
+                >
+                  Dashboard
+                </Link>
+                <LogoutDialog
+                  className="flex min-h-11 w-full items-center rounded-md px-3 text-left text-sm font-medium text-destructive hover:bg-muted"
+                  onTrigger={() => setMobileNavOpen(false)}
+                />
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/auth/register"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>

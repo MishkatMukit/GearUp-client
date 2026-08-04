@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { logoutAction } from "@/app/auth/_actions/logout"
 
-export function LogoutDialog({ className }: { className?: string }) {
+export function LogoutDialog({ className, onTrigger }: { className?: string; onTrigger?: () => void }) {
   const [open, setOpen] = useState(false)
   const [, formAction, pending] = useActionState(logoutAction, undefined)
 
@@ -25,6 +25,7 @@ export function LogoutDialog({ className }: { className?: string }) {
       <DialogTrigger asChild>
         <Button
           variant="ghost"
+          onClick={onTrigger}
           className={className ?? "h-full w-full justify-start text-destructive hover:text-destructive"}
         >
           <LogOut className="size-4" />

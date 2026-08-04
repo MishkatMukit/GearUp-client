@@ -1,6 +1,7 @@
 "use client"
 
 import type { ComponentType } from "react"
+import { useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -65,6 +66,20 @@ export function DashboardShell({ user: serverUser, children }: DashboardShellPro
     (item) => pathname === item.href || pathname.startsWith(item.href + "/"),
   )
 
+  useEffect(() => {
+    if (!isOpen) return
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDashboardSidebarOpen(false)
+    }
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    window.addEventListener("keydown", onKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener("keydown", onKeyDown)
+    }
+  }, [isOpen, setDashboardSidebarOpen])
+
   const sidebarContent = (
     <nav className="flex flex-col gap-1 p-4">
       <span  className="mb-4 flex items-center gap-2 px-2">
@@ -99,24 +114,30 @@ export function DashboardShell({ user: serverUser, children }: DashboardShellPro
         {sidebarContent}
       </aside>
 
-      {isOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+      <div className={cn("fixed inset-x-0 bottom-0 top-16 z-40 lg:hidden", !isOpen && "pointer-events-none")}>
+        <div
+          className={cn(
+            "absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-200",
+            isOpen ? "opacity-100" : "opacity-0",
+          )}
+          onClick={() => setDashboardSidebarOpen(false)}
+        />
+        <aside
+          className={cn(
+            "absolute inset-y-0 left-0 flex w-56 max-w-[85%] flex-col border-r bg-card transition-transform duration-200",
+            isOpen ? "translate-x-0" : "-translate-x-full",
+          )}
+        >
+          <button
             onClick={() => setDashboardSidebarOpen(false)}
-          />
-          <aside className="absolute inset-y-0 left-0 w-64 border-r bg-card">
-            <button
-              onClick={() => setDashboardSidebarOpen(false)}
-              aria-label="Close menu"
-              className="absolute top-4 right-4 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <X className="size-5" />
-            </button>
-            {sidebarContent}
-          </aside>
-        </div>
-      )}
+            aria-label="Close menu"
+            className="absolute top-4 right-4 z-10 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <X className="size-5" />
+          </button>
+          <div className="flex-1 overflow-y-auto pb-[env(safe-area-inset-bottom)]">{sidebarContent}</div>
+        </aside>
+      </div>
 
       <div className="lg:pl-64">
         <header className="sticky top-16 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur sm:px-6">
