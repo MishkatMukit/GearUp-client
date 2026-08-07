@@ -16,6 +16,7 @@ import {
 import { useUserStore } from "@/stores/useUserStore"
 import { useUiStore } from "@/stores/useUiStore"
 import { LogoutDialog } from "@/components/shared/LogoutDialog"
+import { ThemeToggle } from "@/components/shared/ThemeToggle"
 import { cn, normalizeImageUrl } from "@/lib/utils"
 import type { User as UserType } from "@/service/auth"
 
@@ -95,6 +96,7 @@ export function Navbar({ user: serverUser, transparent = false }: NavbarProps) {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle overDark={overDark} />
           {currentUser ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -142,17 +144,20 @@ export function Navbar({ user: serverUser, transparent = false }: NavbarProps) {
           )}
         </div>
 
-        <button
-          onClick={() => setMobileNavOpen(!isOpen)}
-          className="flex items-center md:hidden"
-          aria-label="Toggle menu"
-        >
-          {isOpen ? (
-            <X className="size-5" />
-          ) : (
-            <Menu className={cn("size-5", overDark && "text-white")} />
-          )}
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle overDark={overDark} />
+          <button
+            onClick={() => setMobileNavOpen(!isOpen)}
+            className="flex items-center"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? (
+              <X className="size-5" />
+            ) : (
+              <Menu className={cn("size-5", overDark && "text-white")} />
+            )}
+          </button>
+        </div>
       </div>
 
       <div
